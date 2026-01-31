@@ -49,7 +49,16 @@ export interface QuizState {
 }
 
 export interface QuizResult {
+  questionIndex: number
+  examNumber: number
+  questionNumber: number
+  question: string
+  reference: string
+  selectedAnswers: number[]
+  correctAnswers: number[]
   isCorrect: boolean
-  correctAnswers: Answer[]
-  selectedAnswerNumbers: number[]
+  wasAnswered: boolean
+  userAnswerTexts: string[]
+  correctAnswerTexts: string[]
+  isReviewed: boolean
 }

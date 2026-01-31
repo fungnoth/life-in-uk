@@ -19,7 +19,7 @@ export default function IndividualPageContent() {
   const router = useRouter()
   const examNumber = searchParams.get('exam')
   const mode = searchParams.get('mode') || 'practice'
-  
+
   const [availableExams, setAvailableExams] = useState<number[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -30,7 +30,7 @@ export default function IndividualPageContent() {
       try {
         const response = await fetch(getAssetUrl('questions.csv'))
         if (!response.ok) throw new Error('Failed to load exam data')
-        
+
         const csvText = await response.text()
         const questionsData = Papa.parse<Question>(csvText, {
           header: true,
@@ -71,8 +71,8 @@ export default function IndividualPageContent() {
       }
 
       return (
-        <QuizContainer 
-          config={config} 
+        <QuizContainer
+          config={config}
           onBackToSelection={() => router.push('/individual')}
         />
       )
@@ -86,9 +86,9 @@ export default function IndividualPageContent() {
             <p className="text-gray-600 mb-4">
               Available exams: {availableExams.join(', ')}
             </p>
-            <Link 
+            <Link
               href="/individual"
-              className="bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700"
+              className="bg-primary-600 !text-white px-6 py-3 rounded-lg hover:bg-primary-700"
             >
               Back to Exam Selection
             </Link>
@@ -114,9 +114,9 @@ export default function IndividualPageContent() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <p className="text-xl text-red-600 mb-4">Error: {error}</p>
-          <button 
+          <button
             onClick={() => window.location.reload()}
-            className="bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700"
+            className="bg-primary-600 !text-white px-6 py-3 rounded-lg hover:bg-primary-700"
           >
             Retry
           </button>
@@ -133,7 +133,7 @@ export default function IndividualPageContent() {
           <h1 className="text-4xl font-bold text-gray-900 mb-8 text-center">
             Individual Tests
           </h1>
-          
+
           <p className="text-xl text-gray-600 mb-12 text-center max-w-2xl mx-auto">
             Practice specific exam sets. Choose from {availableExams.length} available tests.
           </p>
@@ -147,18 +147,18 @@ export default function IndividualPageContent() {
                 <p className="text-gray-600 mb-6">
                   Practice all questions from exam set {examNum}.
                 </p>
-                
+
                 <div className="space-y-3">
                   <Link
                     href={`/individual?exam=${examNum}&mode=practice`}
-                    className="block w-full bg-primary-600 text-white px-4 py-3 rounded-lg font-medium hover:bg-primary-700 transition-colors text-center"
+                    className="block w-full bg-primary-600 !text-white px-4 py-3 rounded-lg font-medium hover:bg-primary-700 transition-colors text-center"
                   >
                     📚 Practice Mode
                   </Link>
-                  
+
                   <Link
                     href={`/individual?exam=${examNum}&mode=test`}
-                    className="block w-full bg-success-600 text-white px-4 py-3 rounded-lg font-medium hover:bg-success-700 transition-colors text-center"
+                    className="block w-full !bg-success-600 text-white px-4 py-3 rounded-lg font-medium hover:bg-success-700 transition-colors text-center"
                   >
                     ⏱️ Test Mode
                   </Link>
@@ -168,7 +168,7 @@ export default function IndividualPageContent() {
           </div>
 
           <div className="text-center">
-            <Link 
+            <Link
               href="/"
               className="text-primary-600 hover:text-primary-700 font-medium"
             >

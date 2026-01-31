@@ -1,5 +1,4 @@
-'use client'
-
+import { useState } from 'react'
 import { QuestionStatus } from './types'
 
 interface QuestionGridProps {
@@ -10,17 +9,19 @@ interface QuestionGridProps {
   mode: 'practice' | 'test' | 'individual'
 }
 
-export function QuestionGrid({ 
-  questions, 
-  currentQuestionIndex, 
-  getQuestionStatus, 
+export function QuestionGrid({
+  questions,
+  currentQuestionIndex,
+  getQuestionStatus,
   onQuestionClick,
-  mode 
+  mode
 }: QuestionGridProps) {
+  const [isExpanded, setIsExpanded] = useState(false)
+
   const getStatusClass = (status: QuestionStatus) => {
     switch (status) {
       case 'current':
-        return 'border-primary-600 bg-primary-600 text-white'
+        return 'border-primary-600 bg-primary-600 !text-white'
       case 'correct':
         return 'border-success-500 bg-success-500 text-white'
       case 'incorrect':
@@ -32,28 +33,59 @@ export function QuestionGrid({
     }
   }
 
-  // For practice mode, show all questions in rows of 20
+  // For practice mode, show all questions with a toggle
   if (mode === 'practice') {
     return (
-      <div className="mb-4">
-        {Array.from({ length: Math.ceil(questions.length / 20) }, (_, rowIndex) => (
-          <div key={rowIndex} className="grid grid-cols-20 gap-1 mb-2">
-            {questions.slice(rowIndex * 20, (rowIndex + 1) * 20).map((_, index) => {
-              const actualIndex = rowIndex * 20 + index
-              return (
-                <button
-                  key={actualIndex}
-                  onClick={() => onQuestionClick(actualIndex)}
-                  className={`w-8 h-8 text-xs rounded border-2 font-medium transition-all duration-200 ${
-                    getStatusClass(getQuestionStatus(actualIndex))
-                  }`}
-                >
-                  {actualIndex + 1}
-                </button>
-              )
-            })}
-          </div>
-        ))}
+      <div className="mb-6">
+        <div className="flex justify-between items-center mb-2">
+          <span className="text-sm font-medium text-gray-600">Question Navigator</span>
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="text-sm text-primary-600 hover:text-primary-700 font-medium flex items-center gap-1"
+          >
+            {isExpanded ? (
+              <>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                </svg>
+                Collapse
+              </>
+            ) : (
+              <>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+                Expand All
+              </>
+            )}
+          </button>
+        </div>
+        <div
+          className={`mb-4 overflow-y-auto ${isExpanded ? '' : 'max-h-[90px]'
+            }`}
+          style={{
+            resize: isExpanded ? 'vertical' : 'none',
+            minHeight: '40px'
+          }}
+        >
+          {Array.from({ length: Math.ceil(questions.length / 20) }, (_, rowIndex) => (
+            <div key={rowIndex} className="grid grid-cols-20 mb-2 gap-2 pr-2">
+              {questions.slice(rowIndex * 20, (rowIndex + 1) * 20).map((_, index) => {
+                const actualIndex = rowIndex * 20 + index
+                return (
+                  <button
+                    key={actualIndex}
+                    onClick={() => onQuestionClick(actualIndex)}
+                    className={`w-8 h-8 text-xs rounded border-2 font-medium transition-all duration-200 ${getStatusClass(getQuestionStatus(actualIndex))
+                      }`}
+                  >
+                    {actualIndex + 1}
+                  </button>
+                )
+              })}
+            </div>
+          ))}
+        </div>
       </div>
     )
   }
@@ -65,9 +97,8 @@ export function QuestionGrid({
         <button
           key={index}
           onClick={() => onQuestionClick(index)}
-          className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg border-2 text-xs sm:text-sm font-medium transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-400 ${
-            getStatusClass(getQuestionStatus(index))
-          }`}
+          className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg border-2 text-xs sm:text-sm font-medium transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-400 ${getStatusClass(getQuestionStatus(index))
+            }`}
           title={`Question ${index + 1} - ${getQuestionStatus(index).charAt(0).toUpperCase() + getQuestionStatus(index).slice(1)}`}
         >
           {index + 1}

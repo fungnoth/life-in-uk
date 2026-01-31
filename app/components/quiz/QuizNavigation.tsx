@@ -41,14 +41,13 @@ export function QuizNavigation({
         Previous
       </button>
 
-      <button 
+      <button
         onClick={onMarkForReview}
         disabled={!canMarkForReview}
-        className={`px-4 sm:px-8 py-3 rounded-lg font-medium transition-colors order-2 ${
-          canMarkForReview
-            ? 'bg-warning-500 text-white hover:bg-warning-600'
-            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-        }`}
+        className={`px-4 sm:px-8 py-3 rounded-lg font-medium transition-colors order-2 ${canMarkForReview
+          ? 'bg-warning-500 text-white hover:bg-warning-600'
+          : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+          }`}
         title={!canMarkForReview ? 'Cannot mark reviewed or checked questions' : 'Mark this question for review'}
       >
         {isCurrentQuestionReviewed ? 'Reviewed' : 'Review'}
@@ -58,14 +57,14 @@ export function QuizNavigation({
         isLastQuestion ? (
           <button
             onClick={onFinish}
-            className="bg-success-600 text-white px-4 sm:px-8 py-3 rounded-lg font-medium hover:bg-success-700 order-3"
+            className="bg-success-600 !text-white px-4 sm:px-8 py-3 rounded-lg font-medium hover:bg-success-700 order-3"
           >
             Finish {mode === 'test' ? 'Test' : mode === 'individual' ? 'Exam' : 'Practice'}
           </button>
         ) : (
           <button
             onClick={onNext}
-            className="bg-primary-600 text-white px-4 sm:px-8 py-3 rounded-lg font-medium hover:bg-primary-700 order-3"
+            className="!bg-primary-600 text-white px-4 sm:px-8 py-3 rounded-lg font-medium hover:bg-primary-700 order-3"
           >
             Next
           </button>
@@ -74,14 +73,14 @@ export function QuizNavigation({
         isLastQuestion && isComplete ? (
           <button
             onClick={onFinish}
-            className="bg-success-600 text-white px-4 sm:px-8 py-3 rounded-lg font-medium hover:bg-success-700 order-3"
+            className="bg-success-600 !text-white px-4 sm:px-8 py-3 rounded-lg font-medium hover:bg-success-700 order-3"
           >
             Finish {mode === 'test' ? 'Test' : mode === 'individual' ? 'Exam' : 'Practice'}
           </button>
         ) : (
           <button
             onClick={onCheck}
-            className="bg-primary-600 text-white px-4 sm:px-8 py-3 rounded-lg font-medium hover:bg-primary-700 order-3"
+            className="!bg-primary-600 !text-white px-4 sm:px-8 py-3 rounded-lg font-medium hover:bg-primary-700 order-3"
           >
             Check
           </button>

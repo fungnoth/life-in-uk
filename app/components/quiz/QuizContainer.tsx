@@ -19,28 +19,28 @@ export function QuizContainer({ config, onBackToSelection }: QuizContainerProps)
 
   const handleFinish = () => {
     const finishResult = actions.finishQuiz()
-    
+
     // Store results in sessionStorage
     const resultsId = Date.now().toString()
     const storageKey = `${config.mode}-results-${resultsId}`
     sessionStorage.setItem(storageKey, JSON.stringify(finishResult.results))
-    
+
     // Navigate to results page
     const params = new URLSearchParams({
       id: resultsId,
       mode: config.mode
     })
-    
+
     if (config.examNumber) {
       params.set('exam', config.examNumber.toString())
     }
-    
+
     router.push(`/results?${params.toString()}`)
   }
 
   if (state.loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-[100dvh] flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-600 mx-auto mb-4"></div>
           <p className="text-xl text-gray-600">
@@ -53,19 +53,19 @@ export function QuizContainer({ config, onBackToSelection }: QuizContainerProps)
 
   if (state.error) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-[100dvh] flex items-center justify-center">
         <div className="text-center">
           <p className="text-xl text-red-600 mb-4">Error: {state.error}</p>
-          <button 
+          <button
             onClick={() => window.location.reload()}
-            className="bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 mr-4"
+            className="bg-primary-600 !text-white px-6 py-3 rounded-lg hover:bg-primary-700 mr-4"
           >
             Retry
           </button>
           {onBackToSelection && (
-            <button 
+            <button
               onClick={onBackToSelection}
-              className="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700"
+              className="bg-gray-600 !text-white px-6 py-3 rounded-lg hover:bg-gray-700"
             >
               Back to Selection
             </button>
@@ -77,15 +77,15 @@ export function QuizContainer({ config, onBackToSelection }: QuizContainerProps)
 
   if (state.questions.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-[100dvh] flex items-center justify-center">
         <div className="text-center">
           <p className="text-xl text-red-600 mb-4">
             No questions found{config.examNumber ? ` for exam ${config.examNumber}` : ''}
           </p>
           {onBackToSelection && (
-            <button 
+            <button
               onClick={onBackToSelection}
-              className="bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700"
+              className="bg-primary-600 !text-white px-6 py-3 rounded-lg hover:bg-primary-700"
             >
               Back to Selection
             </button>
@@ -100,10 +100,10 @@ export function QuizContainer({ config, onBackToSelection }: QuizContainerProps)
   const selectedAnswers = state.selectedAnswers[state.currentQuestionIndex] || []
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-[100dvh] bg-gray-50">
+      <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8">
         <div className="max-w-4xl mx-auto">
-          
+
           {/* Header */}
           <QuizHeader
             mode={config.mode}
@@ -124,7 +124,7 @@ export function QuizContainer({ config, onBackToSelection }: QuizContainerProps)
                 {getters.getAnsweredCount()} of {state.questions.length} answered
               </span>
             </div>
-            
+
             <QuestionGrid
               questions={state.questions}
               currentQuestionIndex={state.currentQuestionIndex}
@@ -132,9 +132,9 @@ export function QuizContainer({ config, onBackToSelection }: QuizContainerProps)
               onQuestionClick={actions.goToQuestion}
               mode={config.mode}
             />
-            
+
             <QuestionStatusLegend mode={config.mode} />
-            
+
             {/* Test completion status */}
             {config.mode === 'test' && getters.isComplete() && (
               <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
@@ -152,7 +152,7 @@ export function QuizContainer({ config, onBackToSelection }: QuizContainerProps)
               <div className="mt-4">
                 <button
                   onClick={handleFinish}
-                  className="bg-success-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-success-700"
+                  className="bg-success-600 !text-white px-6 py-3 rounded-lg font-medium hover:bg-success-700"
                 >
                   Finish Practice ({getters.getAnsweredCount()} questions answered)
                 </button>

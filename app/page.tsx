@@ -7,9 +7,9 @@ export default function Home() {
         <h1 className="text-5xl font-bold text-gray-900 mb-6">
           Life in the UK Test
         </h1>
-        
+
         <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto">
-          Practice for your British citizenship test with authentic questions. 
+          Practice for your British citizenship test with authentic questions.
           Test your knowledge of UK history, culture, and government.
         </p>
 
@@ -21,9 +21,9 @@ export default function Home() {
             <p className="text-gray-600 mb-6">
               Practice with all available questions. No time limit, instant feedback.
             </p>
-            <Link 
+            <Link
               href="/practice"
-              className="inline-block bg-primary-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-700 transition-colors"
+              className="inline-block bg-primary-600 !text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-700 transition-colors"
             >
               Start Practice
             </Link>
@@ -36,9 +36,9 @@ export default function Home() {
             <p className="text-gray-600 mb-6">
               Take the official test format: 24 questions, 45 minutes, pass with 75%.
             </p>
-            <Link 
+            <Link
               href="/test"
-              className="inline-block bg-success-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-success-700 transition-colors"
+              className="inline-block bg-success-600 !text-white px-6 py-3 rounded-lg font-medium hover:bg-success-700 transition-colors"
             >
               Take Test
             </Link>
@@ -51,7 +51,7 @@ export default function Home() {
             <p className="text-gray-600 mb-6">
               Practice specific exam sets. Choose from available individual tests.
             </p>
-            <Link 
+            <Link
               href="/individual"
               className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
             >
@@ -65,7 +65,7 @@ export default function Home() {
             About the Life in the UK Test
           </h3>
           <p className="text-blue-800">
-            This test is required for anyone applying for British citizenship or settlement. 
+            This test is required for anyone applying for British citizenship or settlement.
             You need to score 75% (18 out of 24 questions) to pass.
           </p>
         </div>

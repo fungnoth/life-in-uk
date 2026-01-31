@@ -5,7 +5,7 @@ import { QuizContainer } from '../components/quiz'
 export default function PracticePage() {
   const config = {
     mode: 'practice' as const,
-    shuffleQuestions: true,
+    shuffleQuestions: false,
     shuffleAnswers: true,
     showInstantFeedback: true,
     allowReview: true,

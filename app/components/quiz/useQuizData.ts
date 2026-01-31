@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import Papa from 'papaparse'
 import { getAssetUrl } from '../../utils/assets'
-import { QuizAnalytics } from '../../utils/analytics'
 import { QuestionData, QuizConfig, QuizState, QuestionStatus } from './types'
 
 export function useQuizData(config: QuizConfig) {
@@ -17,9 +16,98 @@ export function useQuizData(config: QuizConfig) {
     error: null
   })
 
-  const sessionStartTime = useRef<number>(Date.now())
-  const questionStartTime = useRef<number>(Date.now())
-  const hasTrackedStart = useRef<boolean>(false)
+  const isLocalStorageLoaded = useRef<boolean>(false)
+
+  // Storage keys
+  const REVIEWED_STORAGE_KEY = 'life-in-uk-reviewed-questions'
+  const PROGRESS_STORAGE_KEY = 'life-in-uk-practice-progress'
+
+  // Load state from localStorage
+  useEffect(() => {
+    if (config.mode === 'practice' && !isLocalStorageLoaded.current && state.questions.length > 0) {
+      try {
+        const storedReviewed = localStorage.getItem(REVIEWED_STORAGE_KEY)
+        const storedProgress = localStorage.getItem(PROGRESS_STORAGE_KEY)
+
+        const updates: Partial<QuizState> = {}
+
+        if (storedReviewed) {
+          const reviewedKeys = JSON.parse(storedReviewed) as string[]
+          const newReviewedIndices = new Set<number>()
+          state.questions.forEach((q, index) => {
+            const key = `${q.examNumber}-${q.questionNumber}`
+            if (reviewedKeys.includes(key)) newReviewedIndices.add(index)
+          })
+          updates.reviewedQuestions = newReviewedIndices
+        }
+
+        if (storedProgress) {
+          const progress = JSON.parse(storedProgress) as {
+            selectedAnswers: { [key: string]: number[] },
+            questionStatuses: { [key: string]: QuestionStatus },
+            currentIndex: number
+          }
+
+          const newSelectedAnswers: { [key: number]: number[] } = {}
+          const newQuestionStatuses: { [key: number]: QuestionStatus } = {}
+
+          state.questions.forEach((q, index) => {
+            const key = `${q.examNumber}-${q.questionNumber}`
+            if (progress.selectedAnswers[key]) newSelectedAnswers[index] = progress.selectedAnswers[key]
+            if (progress.questionStatuses[key]) newQuestionStatuses[index] = progress.questionStatuses[key]
+          })
+
+          updates.selectedAnswers = newSelectedAnswers
+          updates.questionStatuses = newQuestionStatuses
+          updates.currentQuestionIndex = Math.min(progress.currentIndex || 0, state.questions.length - 1)
+          updates.showResult = !!newQuestionStatuses[updates.currentQuestionIndex]
+        }
+
+        if (Object.keys(updates).length > 0) {
+          setState(prev => ({ ...prev, ...updates }))
+        }
+      } catch (e) {
+        console.error('Failed to load state from localStorage', e)
+      }
+      isLocalStorageLoaded.current = true
+    }
+  }, [config.mode, state.questions])
+
+  // Sync state to localStorage
+  useEffect(() => {
+    if (config.mode === 'practice' && isLocalStorageLoaded.current) {
+      try {
+        // Reviewed questions
+        const reviewedKeys = Array.from(state.reviewedQuestions).map(index => {
+          const q = state.questions[index]
+          return q ? `${q.examNumber}-${q.questionNumber}` : null
+        }).filter(Boolean)
+        localStorage.setItem(REVIEWED_STORAGE_KEY, JSON.stringify(reviewedKeys))
+
+        // Progress
+        const selectedAnswersByKeys: { [key: string]: number[] } = {}
+        const statusesByKeys: { [key: string]: QuestionStatus } = {}
+
+        Object.entries(state.selectedAnswers).forEach(([index, answers]) => {
+          const q = state.questions[parseInt(index)]
+          if (q) selectedAnswersByKeys[`${q.examNumber}-${q.questionNumber}`] = answers
+        })
+
+        Object.entries(state.questionStatuses).forEach(([index, status]) => {
+          const q = state.questions[parseInt(index)]
+          if (q) statusesByKeys[`${q.examNumber}-${q.questionNumber}`] = status
+        })
+
+        localStorage.setItem(PROGRESS_STORAGE_KEY, JSON.stringify({
+          selectedAnswers: selectedAnswersByKeys,
+          questionStatuses: statusesByKeys,
+          currentIndex: state.currentQuestionIndex
+        }))
+      } catch (e) {
+        console.error('Failed to save state to localStorage', e)
+      }
+    }
+  }, [state.reviewedQuestions, state.selectedAnswers, state.questionStatuses, state.currentQuestionIndex, config.mode, state.questions])
 
   // Load questions and answers from CSV files
   useEffect(() => {
@@ -49,7 +137,7 @@ export function useQuizData(config: QuizConfig) {
 
         // Group answers by question
         const questionMap = new Map<string, QuestionData>()
-        
+
         // Filter questions based on config
         questionsData.forEach((q: any) => {
           if (q.question && q.question.trim().length > 0) {
@@ -57,14 +145,14 @@ export function useQuizData(config: QuizConfig) {
             if (config.examNumber && parseInt(q.examNumber) !== config.examNumber) {
               return
             }
-            
+
             const key = `${q.examNumber}-${q.questionNumber}`
-            questionMap.set(key, { 
-              ...q, 
+            questionMap.set(key, {
+              ...q,
               examNumber: parseInt(q.examNumber),
               questionNumber: parseInt(q.questionNumber),
-              answers: [], 
-              isMultipleChoice: false 
+              answers: [],
+              isMultipleChoice: false
             })
           }
         })
@@ -86,14 +174,14 @@ export function useQuizData(config: QuizConfig) {
         const validQuestions = Array.from(questionMap.values())
           .filter(question => {
             const hasValidAnswers = question.answers.length > 0
-            const correctAnswers = question.answers.filter(a => 
+            const correctAnswers = question.answers.filter(a =>
               a.isCorrect && (a.isCorrect.toLowerCase() === 'true' || a.isCorrect.toLowerCase() === 'yes')
             )
             const hasCorrectAnswer = correctAnswers.length > 0
-            
+
             // Set multiple choice flag
             question.isMultipleChoice = correctAnswers.length > 1
-            
+
             return hasValidAnswers && hasCorrectAnswer
           })
 
@@ -103,15 +191,15 @@ export function useQuizData(config: QuizConfig) {
 
         // Apply question limit and shuffling
         let finalQuestions = validQuestions
-        
+
         if (config.shuffleQuestions) {
           finalQuestions = [...finalQuestions].sort(() => Math.random() - 0.5)
         }
-        
+
         if (config.maxQuestions && finalQuestions.length > config.maxQuestions) {
           finalQuestions = finalQuestions.slice(0, config.maxQuestions)
         }
-        
+
         // Shuffle answers if configured
         if (config.shuffleAnswers) {
           finalQuestions.forEach(question => {
@@ -119,11 +207,6 @@ export function useQuizData(config: QuizConfig) {
           })
         }
 
-        // Track quiz start
-        if (!hasTrackedStart.current && finalQuestions.length > 0) {
-          QuizAnalytics.trackQuizStart(config.mode, finalQuestions.length)
-          hasTrackedStart.current = true
-        }
 
         setState(prev => ({
           ...prev,
@@ -145,9 +228,6 @@ export function useQuizData(config: QuizConfig) {
   }, [config.examNumber, config.maxQuestions, config.shuffleQuestions, config.shuffleAnswers, config.mode])
 
   // Track question timing when question changes
-  useEffect(() => {
-    questionStartTime.current = Date.now()
-  }, [state.currentQuestionIndex])
 
   // Timer countdown for test mode
   useEffect(() => {
@@ -171,7 +251,7 @@ export function useQuizData(config: QuizConfig) {
 
       setState(prev => {
         const currentSelections = prev.selectedAnswers[prev.currentQuestionIndex] || []
-        
+
         let newSelections: number[]
         if (currentQuestion.isMultipleChoice) {
           // Multiple choice: toggle selection
@@ -214,24 +294,14 @@ export function useQuizData(config: QuizConfig) {
         selectedAnswerNumbers.every(num => correctAnswerNumbers.includes(num)) &&
         correctAnswerNumbers.every(num => selectedAnswerNumbers.includes(num))
 
-      // Track analytics
-      const timeSpent = Math.round((Date.now() - questionStartTime.current) / 1000)
-      QuizAnalytics.trackQuestionAnswer({
-        examNumber: currentQuestion.examNumber,
-        questionNumber: currentQuestion.questionNumber,
-        question: currentQuestion.question,
-        selectedAnswers: selectedAnswerNumbers,
-        correctAnswers: correctAnswerNumbers,
-        isCorrect,
-        isMultipleChoice: currentQuestion.isMultipleChoice,
-        timeSpent,
-        mode: config.mode
-      })
 
       setState(prev => {
         const newReviewedQuestions = new Set(prev.reviewedQuestions)
-        newReviewedQuestions.delete(prev.currentQuestionIndex)
-        
+        // Only clear review status in non-practice modes when answering
+        if (config.mode !== 'practice') {
+          newReviewedQuestions.delete(prev.currentQuestionIndex)
+        }
+
         return {
           ...prev,
           questionStatuses: {
@@ -245,25 +315,22 @@ export function useQuizData(config: QuizConfig) {
     },
 
     markForReview: () => {
-      const canMark = !state.showResult && 
-        state.questionStatuses[state.currentQuestionIndex] !== 'correct' && 
-        state.questionStatuses[state.currentQuestionIndex] !== 'incorrect'
-      
+      // For practice mode, always allow marking for review
+      const canMark = config.mode === 'practice' || (!state.showResult &&
+        state.questionStatuses[state.currentQuestionIndex] !== 'correct' &&
+        state.questionStatuses[state.currentQuestionIndex] !== 'incorrect')
+
       if (!canMark) return
 
-      const currentQuestion = state.questions[state.currentQuestionIndex]
-      if (currentQuestion) {
-        QuizAnalytics.trackQuestionReview(
-          currentQuestion.examNumber, 
-          currentQuestion.questionNumber, 
-          config.mode
-        )
-      }
 
       setState(prev => {
         const newReviewedQuestions = new Set(prev.reviewedQuestions)
-        newReviewedQuestions.add(prev.currentQuestionIndex)
-        
+        if (newReviewedQuestions.has(prev.currentQuestionIndex)) {
+          newReviewedQuestions.delete(prev.currentQuestionIndex)
+        } else {
+          newReviewedQuestions.add(prev.currentQuestionIndex)
+        }
+
         return {
           ...prev,
           reviewedQuestions: newReviewedQuestions
@@ -310,20 +377,20 @@ export function useQuizData(config: QuizConfig) {
       // Calculate results
       const results = state.questions.map((question, index) => {
         const selectedAnswerNumbers = state.selectedAnswers[index] || []
-        const correctAnswers = question.answers.filter(a => 
+        const correctAnswers = question.answers.filter(a =>
           a.isCorrect && (a.isCorrect.toLowerCase() === 'true' || a.isCorrect.toLowerCase() === 'yes')
         )
         const correctAnswerNumbers = correctAnswers.map(a => a.answerNumber)
-        
-        const wasAnswered = selectedAnswerNumbers.length > 0 || 
-          state.questionStatuses[index] === 'correct' || 
+
+        const wasAnswered = selectedAnswerNumbers.length > 0 ||
+          state.questionStatuses[index] === 'correct' ||
           state.questionStatuses[index] === 'incorrect'
-        
+
         const isCorrect = wasAnswered && selectedAnswerNumbers.length === correctAnswerNumbers.length &&
           selectedAnswerNumbers.every(num => correctAnswerNumbers.includes(num)) &&
           correctAnswerNumbers.every(num => selectedAnswerNumbers.includes(num))
 
-        const userAnswerTexts = selectedAnswerNumbers.map(num => 
+        const userAnswerTexts = selectedAnswerNumbers.map(num =>
           question.answers.find(a => a.answerNumber === num)?.answer || ''
         ).filter(text => text)
 
@@ -340,32 +407,23 @@ export function useQuizData(config: QuizConfig) {
           isCorrect,
           wasAnswered,
           userAnswerTexts,
-          correctAnswerTexts
+          correctAnswerTexts,
+          isReviewed: state.reviewedQuestions.has(index)
         }
       })
 
-      // Track completion
       const answeredCount = results.filter(r => config.mode === 'practice' ? r.wasAnswered : r.selectedAnswers.length > 0).length
       const correctCount = results.filter(r => r.isCorrect).length
-      const sessionDuration = Math.round((Date.now() - sessionStartTime.current) / 1000)
-      
-      QuizAnalytics.trackSessionComplete({
-        mode: config.mode,
-        totalQuestions: state.questions.length,
-        questionsAnswered: answeredCount,
-        correctAnswers: correctCount,
-        sessionDuration,
-        completionRate: (answeredCount / state.questions.length) * 100
-      })
 
       return {
-        results: config.mode === 'practice' ? results.filter(r => r.wasAnswered) : results,
+        results: config.mode === 'practice'
+          ? results.filter(r => r.wasAnswered || r.isReviewed)
+          : results,
         summary: {
           totalQuestions: state.questions.length,
           answeredCount,
           correctCount,
-          percentage: Math.round((correctCount / answeredCount) * 100) || 0,
-          sessionDuration
+          percentage: Math.round((correctCount / answeredCount) * 100) || 0
         }
       }
     }
@@ -373,25 +431,24 @@ export function useQuizData(config: QuizConfig) {
 
   const getters = {
     getCurrentQuestion: () => state.questions[state.currentQuestionIndex],
-    
+
     getQuestionStatus: (index: number): QuestionStatus => {
       if (index === state.currentQuestionIndex) return 'current'
+      if (state.reviewedQuestions.has(index)) return 'review'
       const status = state.questionStatuses[index]
       if (status === 'correct') return 'correct'
       if (status === 'incorrect') return 'incorrect'
-      if (state.reviewedQuestions.has(index)) return 'review'
-      if (state.selectedAnswers[index] && state.selectedAnswers[index].length > 0) return 'unanswered'
       return 'unanswered'
     },
 
     getCurrentResult: () => {
       if (!state.showResult) return null
-      
+
       const currentQuestion = state.questions[state.currentQuestionIndex]
       if (!currentQuestion) return null
-      
+
       const selectedAnswerNumbers = state.selectedAnswers[state.currentQuestionIndex] || []
-      const correctAnswers = currentQuestion.answers.filter(a => 
+      const correctAnswers = currentQuestion.answers.filter(a =>
         a.isCorrect && (a.isCorrect.toLowerCase() === 'true' || a.isCorrect.toLowerCase() === 'yes')
       )
       const correctAnswerNumbers = correctAnswers.map(a => a.answerNumber)
@@ -408,24 +465,25 @@ export function useQuizData(config: QuizConfig) {
     },
 
     getAnsweredCount: () => {
-      return state.questions.filter((_, index) => 
-        state.questionStatuses[index] === 'correct' || 
-        state.questionStatuses[index] === 'incorrect' || 
+      return state.questions.filter((_, index) =>
+        state.questionStatuses[index] === 'correct' ||
+        state.questionStatuses[index] === 'incorrect' ||
         (state.selectedAnswers[index] && state.selectedAnswers[index].length > 0)
       ).length
     },
 
     isComplete: () => {
-      return state.questions.every((_, index) => 
-        state.questionStatuses[index] === 'correct' || 
-        state.questionStatuses[index] === 'incorrect' || 
+      return state.questions.every((_, index) =>
+        state.questionStatuses[index] === 'correct' ||
+        state.questionStatuses[index] === 'incorrect' ||
         (state.selectedAnswers[index] && state.selectedAnswers[index].length > 0)
       )
     },
 
     canMarkForReview: () => {
-      return !state.showResult && 
-        state.questionStatuses[state.currentQuestionIndex] !== 'correct' && 
+      if (config.mode === 'practice') return true
+      return !state.showResult &&
+        state.questionStatuses[state.currentQuestionIndex] !== 'correct' &&
         state.questionStatuses[state.currentQuestionIndex] !== 'incorrect'
     },
 

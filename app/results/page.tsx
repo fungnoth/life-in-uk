@@ -13,20 +13,23 @@ interface TestResult {
   selectedAnswers: number[]
   correctAnswers: number[]
   isCorrect: boolean
+  wasAnswered: boolean
   userAnswerTexts: string[]
   correctAnswerTexts: string[]
+  isReviewed: boolean
 }
 
 export default function ResultsPage() {
   const searchParams = useSearchParams()
   const [results, setResults] = useState<TestResult[]>([])
   const [loading, setLoading] = useState(true)
+  const [clearedFeedback, setClearedFeedback] = useState<string | null>(null)
 
   useEffect(() => {
     const resultsData = searchParams.get('data')
     const resultsId = searchParams.get('id')
     const mode = searchParams.get('mode')
-    
+
     if (resultsData) {
       // Legacy method: data in URL (for backward compatibility)
       try {
@@ -47,11 +50,11 @@ export default function ResultsPage() {
           storageKey = `test-results-${resultsId}`
         }
         const storedData = sessionStorage.getItem(storageKey)
-        
+
         if (storedData) {
           const parsedResults = JSON.parse(storedData)
           setResults(parsedResults)
-          
+
           // Clean up the stored data after loading
           sessionStorage.removeItem(storageKey)
         } else {
@@ -61,7 +64,7 @@ export default function ResultsPage() {
         console.error('Error parsing results data from sessionStorage:', error)
       }
     }
-    
+
     setLoading(false)
   }, [searchParams])
 
@@ -85,7 +88,7 @@ export default function ResultsPage() {
   const incorrectCount = results.length - correctCount
   const percentage = results.length > 0 ? Math.round((correctCount / results.length) * 100) : 0
   const passed = percentage >= 75
-  const incorrectResults = results.filter(r => !r.isCorrect)
+  const resultsToReview = results.filter(r => !r.isCorrect || r.isReviewed)
 
   const exportIncorrectAnswers = () => {
     const csvHeaders = [
@@ -93,14 +96,16 @@ export default function ResultsPage() {
       'Question',
       'Your Answer(s)',
       'Correct Answer(s)',
+      'Status',
       'Explanation'
     ]
 
-    const csvRows = incorrectResults.map(result => [
+    const csvRows = resultsToReview.map(result => [
       `Question ${result.questionIndex + 1}`,
       `"${result.question.replace(/"/g, '""')}"`,
       `"${result.userAnswerTexts.join('; ').replace(/"/g, '""')}"`,
       `"${result.correctAnswerTexts.join('; ').replace(/"/g, '""')}"`,
+      result.isReviewed ? (result.isCorrect ? 'Correct (Reviewed)' : 'Incorrect (Reviewed)') : 'Incorrect',
       `"${result.reference.replace(/"/g, '""')}"`
     ])
 
@@ -110,7 +115,7 @@ export default function ResultsPage() {
 
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
     const link = document.createElement('a')
-    
+
     if (link.download !== undefined) {
       const url = URL.createObjectURL(blob)
       link.setAttribute('href', url)
@@ -119,6 +124,24 @@ export default function ResultsPage() {
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
+    }
+  }
+
+  const clearPracticeProgress = () => {
+    if (window.confirm('Are you sure you want to clear your practice progress? This will reset all your answers but keep your review markers.')) {
+      localStorage.removeItem('life-in-uk-practice-progress')
+      setClearedFeedback('Practice progress cleared!')
+      setTimeout(() => setClearedFeedback(null), 3000)
+    }
+  }
+
+  const clearReviewMarkers = () => {
+    if (window.confirm('Are you sure you want to clear all review markers?')) {
+      localStorage.removeItem('life-in-uk-reviewed-questions')
+      // Update local state to reflect change immediately
+      setResults(prev => prev.map(r => ({ ...r, isReviewed: false })))
+      setClearedFeedback('Review markers cleared!')
+      setTimeout(() => setClearedFeedback(null), 3000)
     }
   }
 
@@ -164,14 +187,14 @@ export default function ResultsPage() {
               </div>
               <div className="text-gray-600">Correct Answers</div>
             </div>
-            
+
             <div className="bg-white rounded-lg shadow-md p-6 text-center">
               <div className="text-3xl font-bold text-danger-600 mb-2">
                 {incorrectCount}
               </div>
               <div className="text-gray-600">Incorrect Answers</div>
             </div>
-            
+
             <div className="bg-white rounded-lg shadow-md p-6 text-center">
               <div className="text-3xl font-bold text-primary-600 mb-2">
                 {results.length}
@@ -186,7 +209,7 @@ export default function ResultsPage() {
               Actions
             </h2>
             <div className="flex flex-wrap gap-4">
-              {incorrectCount > 0 && (
+              {resultsToReview.length > 0 && (
                 <button
                   onClick={exportIncorrectAnswers}
                   className="bg-warning-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-warning-700 transition-colors flex items-center gap-2"
@@ -194,17 +217,17 @@ export default function ResultsPage() {
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
-                  Export Incorrect Answers (CSV)
+                  Export Questions to Review (CSV)
                 </button>
               )}
-              
+
               <Link
                 href={mode === 'individual' ? '/individual' : '/test'}
-                className="bg-primary-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-700 transition-colors"
+                className="bg-primary-600 !text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-700 transition-colors"
               >
                 {mode === 'individual' ? 'Take Another Individual Test' : 'Take Another Test'}
               </Link>
-              
+
               <Link
                 href="/"
                 className="bg-gray-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-700 transition-colors"
@@ -212,32 +235,70 @@ export default function ResultsPage() {
                 Back to Home
               </Link>
             </div>
+
+            {/* Persistence Management (Practice Mode Only) */}
+            {mode === 'practice' && (
+              <div className="mt-8 pt-6 border-t border-gray-100">
+                <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center gap-2">
+                  <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Practice Progress Management
+                </h3>
+                <div className="flex flex-wrap gap-4">
+                  <button
+                    onClick={clearPracticeProgress}
+                    className="bg-danger-50 text-danger-700 px-4 py-2 border border-danger-200 rounded-lg text-sm font-medium hover:bg-danger-100 transition-colors"
+                  >
+                    Clear Practice Progress
+                  </button>
+                  <button
+                    onClick={clearReviewMarkers}
+                    className="bg-warning-50 text-warning-700 px-4 py-2 border border-warning-200 rounded-lg text-sm font-medium hover:bg-warning-100 transition-colors"
+                  >
+                    Clear All Review Markers
+                  </button>
+                </div>
+                {clearedFeedback && (
+                  <div className="mt-3 text-sm text-success-600 font-medium animate-fade-in">
+                    {clearedFeedback}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
-          {/* Incorrect Answers Details */}
-          {incorrectCount > 0 && (
+          {/* Questions to Review Details */}
+          {resultsToReview.length > 0 && (
             <div className="bg-white rounded-lg shadow-md p-6">
               <h2 className="text-2xl font-semibold text-gray-900 mb-6">
-                Questions You Got Wrong ({incorrectCount})
+                Questions to Review ({resultsToReview.length})
               </h2>
-              
+
               <div className="space-y-6">
-                {incorrectResults.map((result, index) => (
-                  <div key={index} className="border-l-4 border-danger-500 pl-4 py-2">
-                    <div className="font-medium text-gray-900 mb-2">
+                {resultsToReview.map((result, index) => (
+                  <div key={index} className={`border-l-4 ${result.isCorrect ? 'border-warning-500' : 'border-danger-500'} pl-4 py-2`}>
+                    <div className="font-medium text-gray-900 mb-2 flex items-center gap-2">
                       Question {result.questionIndex + 1}: {result.question}
+                      {result.isReviewed && (
+                        <span className="bg-warning-100 text-warning-800 text-xs px-2 py-0.5 rounded-full font-semibold">
+                          Reviewed
+                        </span>
+                      )}
                     </div>
-                    
+
                     <div className="mb-2">
-                      <span className="text-danger-600 font-medium">Your answer: </span>
-                      <span className="text-danger-700">{result.userAnswerTexts.join(', ')}</span>
+                      <span className={`${result.wasAnswered ? (result.isCorrect ? 'text-success-600' : 'text-danger-600') : 'text-gray-500'} font-medium`}>Your answer: </span>
+                      <span className={result.wasAnswered ? (result.isCorrect ? 'text-success-700' : 'text-danger-700') : 'text-gray-600 italic'}>
+                        {result.wasAnswered ? result.userAnswerTexts.join(', ') : 'Not answered'}
+                      </span>
                     </div>
-                    
+
                     <div className="mb-2">
                       <span className="text-success-600 font-medium">Correct answer: </span>
                       <span className="text-success-700">{result.correctAnswerTexts.join(', ')}</span>
                     </div>
-                    
+
                     {result.reference && (
                       <div className="text-sm text-gray-600 bg-gray-50 p-3 rounded">
                         <strong>Explanation:</strong> {result.reference}
@@ -250,7 +311,7 @@ export default function ResultsPage() {
           )}
 
           {/* Perfect Score Message */}
-          {incorrectCount === 0 && (
+          {resultsToReview.length === 0 && (
             <div className="bg-success-50 border border-success-200 rounded-lg p-6 text-center">
               <div className="text-success-700 text-xl font-medium mb-2">
                 🌟 Perfect Score! 🌟

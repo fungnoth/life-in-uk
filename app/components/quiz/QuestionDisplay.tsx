@@ -41,9 +41,9 @@ export function QuestionDisplay({
           const answerId = parseInt(answer.answerNumber?.toString() || '0')
           const isSelected = selectedAnswers.includes(answerId)
           const isCorrect = answer.isCorrect && (answer.isCorrect.toLowerCase() === 'true' || answer.isCorrect.toLowerCase() === 'yes')
-          
+
           let buttonClass = "w-full p-4 text-left rounded-lg border-2 transition-all duration-200 "
-          
+
           if (showResult) {
             if (isSelected && isCorrect) {
               buttonClass += "bg-success-100 border-success-500 text-success-800"
@@ -70,19 +70,17 @@ export function QuestionDisplay({
               disabled={showResult}
             >
               <div className="flex items-center">
-                <div className={`w-4 h-4 mr-3 rounded border-2 flex items-center justify-center ${
-                  question.isMultipleChoice ? 'rounded' : 'rounded-full'
-                } ${
-                  isSelected 
-                    ? showResult 
-                      ? isCorrect 
-                        ? 'bg-success-500 border-success-500' 
+                <div className={`w-4 h-4 mr-3 rounded flex-shrink-0 border-2 flex items-center justify-center ${question.isMultipleChoice ? 'rounded' : 'rounded-full'
+                  } ${isSelected
+                    ? showResult
+                      ? isCorrect
+                        ? 'bg-success-500 border-success-500'
                         : 'bg-danger-500 border-danger-500'
                       : 'bg-primary-500 border-primary-500'
                     : 'border-gray-300'
-                }`}>
+                  }`}>
                   {isSelected && (
-                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <svg className="w-3 h-3 !text-white" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
                   )}
@@ -99,9 +97,8 @@ export function QuestionDisplay({
 
       {/* Result Display */}
       {showResult && result && (
-        <div className={`mb-6 p-4 rounded-lg ${
-          result.isCorrect ? 'bg-success-100 border border-success-300' : 'bg-danger-100 border border-danger-300'
-        }`}>
+        <div className={`mb-6 p-4 rounded-lg ${result.isCorrect ? 'bg-success-100 border border-success-300' : 'bg-danger-100 border border-danger-300'
+          }`}>
           <div className="flex items-center mb-3">
             {result.isCorrect ? (
               <svg className="w-6 h-6 text-success-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
@@ -116,7 +113,7 @@ export function QuestionDisplay({
               {result.isCorrect ? 'Correct!' : 'Incorrect'}
             </span>
           </div>
-          
+
           <div className="text-gray-700 mb-2">
             <p className="font-medium">The correct answer{result.correctAnswers.length > 1 ? 's are' : ' is'}:</p>
             <ul className="list-disc list-inside ml-4">
@@ -142,7 +139,7 @@ export function QuestionDisplay({
               </div>
             )}
           </div>
-          
+
           {question.reference && (
             <div className="text-sm text-gray-700">
               <strong>Explanation:</strong> {question.reference}

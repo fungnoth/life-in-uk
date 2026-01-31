@@ -112,7 +112,7 @@ export function QuizHeader({
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-sm mb-6 p-6">
+    <div className="bg-white rounded-lg shadow-sm mb-6 section-px section-py">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-4">
           <button

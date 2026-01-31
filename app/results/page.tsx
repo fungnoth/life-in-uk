@@ -204,7 +204,7 @@ export default function ResultsPage() {
           </div>
 
           {/* Export and Actions */}
-          <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+          <div className="bg-white rounded-lg shadow-md section-px section-py mb-8">
             <h2 className="text-2xl font-semibold text-gray-900 mb-4">
               Actions
             </h2>
@@ -270,7 +270,7 @@ export default function ResultsPage() {
 
           {/* Questions to Review Details */}
           {resultsToReview.length > 0 && (
-            <div className="bg-white rounded-lg shadow-md p-6">
+            <div className="bg-white rounded-lg shadow-md section-px section-py">
               <h2 className="text-2xl font-semibold text-gray-900 mb-6">
                 Questions to Review ({resultsToReview.length})
               </h2>
@@ -312,7 +312,7 @@ export default function ResultsPage() {
 
           {/* Perfect Score Message */}
           {resultsToReview.length === 0 && (
-            <div className="bg-success-50 border border-success-200 rounded-lg p-6 text-center">
+            <div className="bg-success-50 border border-success-200 rounded-lg section-px section-py text-center">
               <div className="text-success-700 text-xl font-medium mb-2">
                 🌟 Perfect Score! 🌟
               </div>

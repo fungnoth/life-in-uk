@@ -21,12 +21,9 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
+  background: linear-gradient(to bottom,
       transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+      rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
   font-family: 'Inter', sans-serif;
 }
 
@@ -43,34 +40,6 @@ body {
   }
 }
 
-/* Practice mode grid with more columns */
-.grid-cols-20 {
-  grid-template-columns: repeat(20, minmax(0, 1fr));
-}
-
-@media (max-width: 1200px) {
-  .grid-cols-20 {
-    grid-template-columns: repeat(15, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 900px) {
-  .grid-cols-20 {
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 768px) {
-  .grid-cols-20 {
-    grid-template-columns: repeat(10, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 480px) {
-  .grid-cols-20 {
-    grid-template-columns: repeat(8, minmax(0, 1fr));
-  }
-}
 
 .question-button {
   @apply w-12 h-12 rounded border-2 border-gray-300 bg-white text-gray-700 font-medium transition-all duration-200 hover:border-primary-500 hover:text-primary-600;
@@ -110,11 +79,13 @@ body {
 
 /* Force visible text utility class */
 .force-dark-text {
-  color: #111827 !important; /* gray-900 */
+  color: #111827 !important;
+  /* gray-900 */
 }
 
 .force-dark-text * {
-  color: #111827 !important; /* gray-900 */
+  color: #111827 !important;
+  /* gray-900 */
 }
 
 /* Mobile-specific fixes for text colors */
@@ -122,72 +93,82 @@ body {
   .answer-option {
     @apply text-gray-900;
   }
-  
+
   .answer-option span {
     @apply text-gray-900 !important;
   }
-  
+
   .answer-option.selected {
     @apply text-gray-900;
   }
-  
+
   .answer-option.selected span {
     @apply text-gray-900 !important;
   }
-  
+
   /* Force text color for all interactive elements */
   button {
     color: inherit;
   }
-  
+
   /* Ensure proper contrast on mobile */
   .bg-white {
     @apply text-gray-900;
   }
-  
+
   /* Force dark text on all answer buttons */
   button.answer-option span {
-    color: #111827 !important; /* gray-900 */
+    color: #111827 !important;
+    /* gray-900 */
   }
-  
+
   /* Override any inherited text colors on mobile */
   .bg-white * {
     color: inherit;
   }
-  
+
   /* Specific fix for answer text */
   div.space-y-3 button span {
-    color: #111827 !important; /* gray-900 */
+    color: #111827 !important;
+    /* gray-900 */
   }
-  
+
   /* Mobile navigation button fixes */
   .flex.flex-col.gap-3 {
     width: 100%;
   }
-  
+
   /* Ensure buttons don't overflow on small screens */
   @media (max-width: 480px) {
     .px-4.sm\:px-8 {
       padding-left: 0.75rem !important;
       padding-right: 0.75rem !important;
     }
-    
+
     /* Make sure buttons fit on very narrow screens */
     button {
       min-width: 0;
       font-size: 0.875rem;
     }
-    
+
     /* Reduce padding on very small screens */
     .container {
       padding-left: 0.5rem;
       padding-right: 0.5rem;
     }
-    
+
     /* Stack navigation buttons vertically on very small screens */
     .flex.gap-3.order-2 {
       flex-direction: column;
       width: 100%;
     }
   }
+}
+
+.section-px {
+  @apply px-3 sm:px-6;
+}
+
+.section-py {
+  @apply py-6;
 }

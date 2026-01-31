@@ -60,6 +60,10 @@ module.exports = {
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
       },
+      gridTemplateColumns: {
+        '20': 'repeat(20, minmax(0, 1fr))',
+        '15': 'repeat(15, minmax(0, 1fr))',
+      },
     },
   },
   plugins: [],

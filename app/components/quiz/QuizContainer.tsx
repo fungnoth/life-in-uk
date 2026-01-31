@@ -117,7 +117,7 @@ export function QuizContainer({ config, onBackToSelection }: QuizContainerProps)
           />
 
           {/* Question Status Grid */}
-          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+          <div className="bg-white rounded-lg shadow-sm section-px section-py mb-6">
             <div className="flex justify-between text-sm text-gray-600 mb-4">
               <span>Question Status</span>
               <span>
@@ -161,7 +161,7 @@ export function QuizContainer({ config, onBackToSelection }: QuizContainerProps)
           </div>
 
           {/* Question Content */}
-          <div className="bg-white rounded-lg shadow-sm p-6 md:p-8">
+          <div className="bg-white rounded-lg shadow-sm section-px section-py md:p-8">
             <QuestionDisplay
               question={currentQuestion}
               selectedAnswers={selectedAnswers}

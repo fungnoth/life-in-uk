@@ -37,8 +37,7 @@ export function QuestionGrid({
   if (mode === 'practice') {
     return (
       <div className="mb-6">
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-sm font-medium text-gray-600">Question Navigator</span>
+        <div className="flex justify-end items-center mb-2">
           <button
             onClick={() => setIsExpanded(!isExpanded)}
             className="text-sm text-primary-600 hover:text-primary-700 font-medium flex items-center gap-1"
@@ -61,29 +60,23 @@ export function QuestionGrid({
           </button>
         </div>
         <div
-          className={`mb-4 overflow-y-auto ${isExpanded ? '' : 'max-h-[90px]'
-            }`}
+          className="mb-4 overflow-y-auto grid gap-2 pr-2 grid-cols-[repeat(var(--cols,20),minmax(0,1fr))]
+          [--cols:10] md:[--cols:20]"
           style={{
             resize: isExpanded ? 'vertical' : 'none',
-            minHeight: '40px'
-          }}
+            minHeight: '40px',
+            maxHeight: isExpanded ? 'none' : '90px',
+          } as React.CSSProperties}
         >
-          {Array.from({ length: Math.ceil(questions.length / 20) }, (_, rowIndex) => (
-            <div key={rowIndex} className="grid grid-cols-20 mb-2 gap-2 pr-2">
-              {questions.slice(rowIndex * 20, (rowIndex + 1) * 20).map((_, index) => {
-                const actualIndex = rowIndex * 20 + index
-                return (
-                  <button
-                    key={actualIndex}
-                    onClick={() => onQuestionClick(actualIndex)}
-                    className={`w-8 h-8 text-xs rounded border-2 font-medium transition-all duration-200 ${getStatusClass(getQuestionStatus(actualIndex))
-                      }`}
-                  >
-                    {actualIndex + 1}
-                  </button>
-                )
-              })}
-            </div>
+          {questions.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => onQuestionClick(index)}
+              className={`w-8 h-8 text-xs rounded border-2 font-medium transition-all duration-200 ${getStatusClass(getQuestionStatus(index))
+                }`}
+            >
+              {index + 1}
+            </button>
           ))}
         </div>
       </div>
@@ -92,7 +85,13 @@ export function QuestionGrid({
 
   // For test and individual modes, show questions in a responsive grid
   return (
-    <div className="grid grid-cols-10 sm:grid-cols-12 md:grid-cols-15 lg:grid-cols-20 gap-2 mb-4">
+    <div
+      className="grid gap-2 mb-4 grid-cols-[repeat(var(--cols-sm,10),minmax(0,1fr))] lg:grid-cols-[repeat(var(--cols-lg,20),minmax(0,1fr))]"
+      style={{
+        '--cols-sm': 10,
+        '--cols-lg': 20
+      } as React.CSSProperties}
+    >
       {questions.map((_, index) => (
         <button
           key={index}

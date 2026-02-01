@@ -26,6 +26,7 @@
     font-family: 'Inter', sans-serif;
     @apply bg-gray-50 text-gray-900;
     @apply dark:bg-gray-900 dark:text-neutral-300;
+    @apply transition-colors duration-150;
   }
 
   .section-px {

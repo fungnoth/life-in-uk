@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: 'class',
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -66,10 +67,5 @@ module.exports = {
       },
     },
   },
-  plugins: [
-    function ({ addVariant }) {
-      addVariant('light', '@media (prefers-color-scheme: light)')
-      addVariant('dark', '@media (prefers-color-scheme: dark)')
-    },
-  ],
+  plugins: [],
 }

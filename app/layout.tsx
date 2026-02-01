@@ -28,6 +28,17 @@ export const viewport: Viewport = {
   maximumScale: 1,
   userScalable: false,
 }
+const icons = [
+  'bookmark',
+  'bookmark_added',
+  'chevron_left',
+  'keyboard_arrow_down',
+  'light_mode',
+  'dark_mode',
+].sort()
+
+import { ThemeProvider } from './components/ThemeProvider'
+import { ThemeToggle } from './components/ThemeToggle'
 
 export default function RootLayout({
   children,
@@ -35,13 +46,16 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-25..0&icon_names=bookmark,bookmark_added,chevron_left,keyboard_arrow_down" />
+        <link rel="stylesheet" href={`https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-25..0&icon_names=${icons.join(',')}`} />
       </head>
       <body className="min-h-[100svh]">
-        {children}
-        <VersionInfo />
+        <ThemeProvider>
+          <ThemeToggle />
+          {children}
+          <VersionInfo />
+        </ThemeProvider>
       </body>
     </html>
   )

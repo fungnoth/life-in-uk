@@ -21,23 +21,28 @@ export function QuestionGrid({
   const gridRef = useRef<HTMLDivElement>(null)
 
   const scrollToCurrent = () => {
-    if (!isExpanded && gridRef.current) {
-      const currentButton = gridRef.current.children[currentQuestionIndex] as HTMLElement
+    const container = gridRef.current;
+    const scroller = container?.parentElement
+    if (!isExpanded && scroller) {
+      const currentButton = container.children[currentQuestionIndex] as HTMLElement
+
       if (currentButton) {
-        currentButton.scrollIntoView({
-          behavior: 'smooth',
-          block: 'nearest'
-        })
+        // Calculate the position relative to the container
+        const containerTop = scroller.scrollTop
+        const containerHeight = scroller.clientHeight
+        const buttonTop = currentButton.offsetTop
+        const buttonHeight = currentButton.offsetHeight
+
+        // Only scroll if it's not fully visible in the container
+        if (buttonTop < containerTop || (buttonTop + buttonHeight) > (containerTop + containerHeight)) {
+          scroller.scrollTo({
+            top: buttonTop - (containerHeight / 2) + (buttonHeight / 2),
+            behavior: 'smooth'
+          })
+        }
       }
     }
   }
-
-  useEffect(() => {
-    // Scroll automatically if index changes while already collapsed
-    if (!isExpanded) {
-      scrollToCurrent()
-    }
-  }, [currentQuestionIndex, isExpanded])
 
   const getStatusClass = (status: QuestionStatus) => {
     switch (status) {
@@ -79,7 +84,7 @@ export function QuestionGrid({
         >
           <div
             ref={gridRef}
-            className="mb-4 overflow-y-auto grid gap-2 pr-2 grid-cols-[repeat(var(--cols,20),minmax(0,1fr))]
+            className="relative mb-4 grid gap-2 pr-2 grid-cols-[repeat(var(--cols,20),minmax(0,1fr))]
             [--cols:10] md:[--cols:20]"
           >
             {questions.map((_, index) => (

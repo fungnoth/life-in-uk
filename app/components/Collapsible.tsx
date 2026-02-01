@@ -8,6 +8,7 @@ interface CollapsibleProps {
     direction?: 'vertical' | 'horizontal' | 'custom'
     className?: string
     style?: CSSProperties
+    onTransitionEnd?: () => void
 }
 
 export function Collapsible({
@@ -15,7 +16,8 @@ export function Collapsible({
     children,
     direction = 'vertical',
     className = '',
-    style
+    style,
+    onTransitionEnd
 }: CollapsibleProps) {
     let gridClass;
     if (direction === "custom") {
@@ -30,6 +32,11 @@ export function Collapsible({
         <div
             className={`${gridClass} ${isOpen ? 'expanded' : ''} ${className}`}
             style={style}
+            onTransitionEnd={(e) => {
+                if (e.propertyName.includes('grid-template') || e.propertyName === 'opacity') {
+                    onTransitionEnd?.()
+                }
+            }}
         >
             <div className="accordion-inner">
                 {children}

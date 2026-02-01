@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { QuestionStatus } from './types'
 import { Collapsible } from '../Collapsible'
 
@@ -18,6 +18,26 @@ export function QuestionGrid({
   mode
 }: QuestionGridProps) {
   const [isExpanded, setIsExpanded] = useState(false)
+  const gridRef = useRef<HTMLDivElement>(null)
+
+  const scrollToCurrent = () => {
+    if (!isExpanded && gridRef.current) {
+      const currentButton = gridRef.current.children[currentQuestionIndex] as HTMLElement
+      if (currentButton) {
+        currentButton.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest'
+        })
+      }
+    }
+  }
+
+  useEffect(() => {
+    // Scroll automatically if index changes while already collapsed
+    if (!isExpanded) {
+      scrollToCurrent()
+    }
+  }, [currentQuestionIndex, isExpanded])
 
   const getStatusClass = (status: QuestionStatus) => {
     switch (status) {
@@ -43,15 +63,7 @@ export function QuestionGrid({
             onClick={() => setIsExpanded(!isExpanded)}
             className="text-sm text-color--blue font-medium flex items-center gap-1"
           >
-            {isExpanded ? (
-              <>
-                Collapse
-              </>
-            ) : (
-              <>
-                Expand All
-              </>
-            )}
+            {isExpanded ? "Collapse" : "Expand All"}
             <span className={`inline-block transition-transform duration-200 material-symbols-outlined ${isExpanded ? '-scale-y-100' : 'scale-y-100'}`}>
               keyboard_arrow_down
             </span>
@@ -59,12 +71,14 @@ export function QuestionGrid({
         </div>
         <Collapsible
           isOpen={isExpanded}
-          className="peek"
+          className="peek [&>.accordion-inner]:overflow-y-auto"
           style={{
             '--peak-height': '90px'
           } as React.CSSProperties}
+          onTransitionEnd={scrollToCurrent}
         >
           <div
+            ref={gridRef}
             className="mb-4 overflow-y-auto grid gap-2 pr-2 grid-cols-[repeat(var(--cols,20),minmax(0,1fr))]
             [--cols:10] md:[--cols:20]"
           >

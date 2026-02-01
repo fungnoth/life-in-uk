@@ -39,7 +39,7 @@ export default function RootLayout({
       <head>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-25..0&icon_names=bookmark,bookmark_added,chevron_left" />
       </head>
-      <body className="min-h-screen">
+      <body className="min-h-[100svh]">
         {children}
         <VersionInfo />
       </body>

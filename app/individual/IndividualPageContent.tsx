@@ -78,7 +78,7 @@ export default function IndividualPageContent() {
       )
     } else if (!loading && availableExams.length > 0) {
       return (
-        <div className="min-h-screen flex items-center justify-center">
+        <div className="min-h-[100svh] flex items-center justify-center">
           <div className="text-center">
             <p className="text-xl text-red-600 mb-4">
               Exam {examNumber} not found
@@ -100,7 +100,7 @@ export default function IndividualPageContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-[100svh] flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-600 mx-auto mb-4"></div>
           <p className="text-xl text-gray-600">Loading available exams...</p>
@@ -111,7 +111,7 @@ export default function IndividualPageContent() {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-[100svh] flex items-center justify-center">
         <div className="text-center">
           <p className="text-xl text-red-600 mb-4">Error: {error}</p>
           <button
@@ -127,7 +127,7 @@ export default function IndividualPageContent() {
 
   // Show exam selection
   return (
-    <div className="min-h-screen">
+    <div className="min-h-[100svh]">
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-4xl font-bold font-color--title mb-8 text-center">

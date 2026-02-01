@@ -44,6 +44,15 @@ export function QuestionGrid({
     }
   }
 
+  useEffect(() => {
+    // Only scroll automatically when not expanded
+    if (!isExpanded && questions.length > 0) {
+      // Small timeout to ensure DOM is ready
+      const timer = setTimeout(scrollToCurrent, 100)
+      return () => clearTimeout(timer)
+    }
+  }, [questions.length, isExpanded, currentQuestionIndex])
+
   const getStatusClass = (status: QuestionStatus) => {
     switch (status) {
       case 'current':

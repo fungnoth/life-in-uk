@@ -85,7 +85,7 @@ export function QuestionGrid({
         </div>
         <Collapsible
           isOpen={isExpanded}
-          className="peek [&>.accordion-inner]:overflow-y-auto"
+          className={`peek [&>.accordion-inner]:overflow-y-auto ${isExpanded ? 'duration-500' : 'duration-300'}`}
           style={{
             '--peak-height': '90px'
           } as React.CSSProperties}

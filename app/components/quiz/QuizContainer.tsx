@@ -133,12 +133,6 @@ export function QuizContainer({ config, onBackToSelection }: QuizContainerProps)
 
           {/* Question Status Grid */}
           <div className="section-card section-card-color mb-6">
-            <div className="flex justify-between text-sm text-color--muted mb-4">
-              <span>Question Status</span>
-              <span>
-                {getters.getAnsweredCount()} of {state.questions.length} answered
-              </span>
-            </div>
 
             <QuestionGrid
               questions={state.questions}

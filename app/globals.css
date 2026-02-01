@@ -24,8 +24,8 @@
 @layer base {
   body {
     font-family: 'Inter', sans-serif;
-    @apply bg-gray-50 text-gray-900;
-    @apply dark:bg-gray-900 dark:text-neutral-300;
+    @apply bg-gray-50;
+    @apply text-color--body;
     @apply transition-colors duration-150;
   }
 
@@ -81,12 +81,27 @@
 
   .answer-button--unselected {
     @apply bg-white border-gray-200 text-gray-700 hover:border-primary-300 hover:bg-primary-50;
-    @apply dark:bg-gray-200;
+    @apply dark:bg-gray-600 dark:border-gray-400 dark:text-neutral-100;
   }
 
   .answer-button--selected {
     @apply bg-primary-100 border-primary-500 text-primary-800;
     @apply dark:bg-primary-800 dark:border-primary-400 dark:text-primary-50;
+  }
+
+  .answer-button--selected-correct {
+    @apply bg-success-100 border-success-500 text-success-800;
+    @apply dark:bg-success-800 dark:border-success-400 dark:text-success-50;
+  }
+
+  .answer-button--selected-incorrect {
+    @apply bg-danger-100 border-danger-500 text-danger-800;
+    @apply dark:bg-danger-900 dark:border-danger-700 dark:text-danger-50;
+  }
+
+  .answer-button--unselected-correct {
+    @apply bg-success-50 border-success-300 text-success-700;
+    @apply dark:bg-success-300/20 dark:border-success-400 dark:text-success-50;
   }
 
   .section-card {
@@ -205,6 +220,10 @@
 @layer utilities {
   .text-color--title {
     @apply text-gray-900 dark:text-neutral-100;
+  }
+
+  .text-color--body {
+    @apply dark:bg-gray-900 dark:text-neutral-300;
   }
 
   .text-color--muted {

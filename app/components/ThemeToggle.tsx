@@ -38,8 +38,10 @@ export function ThemeToggle() {
     }
 
     return (
-        <div className="container px-2 sm:px-4 mx-auto -mb-6">
-            {getButton()}
+        <div className="container px-2 -mb-3 sm:px-4 mx-auto sm:-mb-6">
+            <div className="max-w-4xl mx-auto">
+                {getButton()}
+            </div>
         </div>
     )
 

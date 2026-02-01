@@ -3,28 +3,201 @@
 @tailwind utilities;
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-25..0&icon_names=bookmark,bookmark_added,chevron_left');
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Disable automatic dark mode to prevent text color issues */
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+@layer base {
+  body {
+    font-family: 'Inter', sans-serif;
+    @apply bg-gray-50 text-gray-900;
+    @apply dark:bg-gray-900 dark:text-neutral-300;
   }
-} */
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
-  font-family: 'Inter', sans-serif;
+  .section-px {
+    @apply px-3 sm:px-6;
+  }
+
+  .section-py {
+    @apply py-6;
+  }
+}
+
+@layer components {
+
+  .base-btn {
+    @apply p-3 sm:px-6 text-center rounded-lg font-medium transition-colors;
+  }
+
+  .btn--blue {
+    @apply base-btn;
+    @apply bg-primary-600 text-white hover:bg-primary-700;
+  }
+
+  .btn--green {
+    @apply base-btn;
+    @apply bg-success-600 text-white hover:bg-success-700;
+  }
+
+  .btn--warning {
+    @apply base-btn;
+    @apply bg-warning-600 text-white hover:bg-warning-700;
+  }
+
+  .btn--danger {
+    @apply base-btn;
+    @apply bg-danger-600 text-white hover:bg-danger-700;
+    @apply dark:bg-danger-800;
+  }
+
+  .btn--gray {
+    @apply base-btn;
+    @apply bg-gray-300 text-gray-700 hover:bg-gray-400;
+  }
+
+  .answer-button {
+    @apply w-full p-4 text-left rounded-lg border-2;
+  }
+
+  .answer-button--other-results {
+    @apply bg-gray-50 border-gray-200 text-gray-700;
+    @apply dark:bg-gray-300;
+  }
+
+  .answer-button--unselected {
+    @apply bg-white border-gray-200 text-gray-700 hover:border-primary-300 hover:bg-primary-50;
+    @apply dark:bg-gray-200;
+  }
+
+  .answer-button--selected {
+    @apply bg-primary-100 border-primary-500 text-primary-800;
+    @apply dark:bg-primary-800 dark:border-primary-400 dark:text-primary-50;
+  }
+
+  .section-card {
+    @apply section-px section-py rounded-xl shadow-md border border-transparent;
+  }
+
+  .section-card-color {
+    @apply bg-white;
+    @apply dark:bg-slate-800 dark:border-slate-400 dark:text-neutral-100;
+  }
+
+  .info-card {
+    @apply section-card rounded-xl;
+  }
+
+  .info-blue-colors {
+    @apply bg-blue-50 text-blue-900 border-blue-200;
+    @apply dark:bg-indigo-900 dark:text-neutral-200 dark:border-indigo-400;
+  }
+
+  .info-red-colors {
+    @apply bg-red-50 text-red-800 border-red-200;
+    @apply dark:bg-red-800 dark:text-neutral-200 dark:border-red-400;
+  }
+
+  .info-green-colors {
+    @apply bg-green-50 text-green-800 border-green-200;
+    @apply dark:bg-green-800 dark:text-neutral-200 dark:border-green-400;
+  }
+
+  .primary-blue-colors {
+    @apply bg-primary-600 text-white border-transparent;
+    @apply dark:bg-primary-700 dark:border-primary-500;
+  }
+
+  .primary-red-colors {
+    @apply border-danger-600 bg-danger-600 text-white;
+    @apply dark:border-danger-600 dark:bg-danger-800;
+  }
+
+  .primary-green-colors {
+    @apply bg-success-600 text-white border-transparent;
+    @apply dark:bg-success-700 dark:border-success-500;
+  }
+
+  .primary-amber-colors {
+    @apply border-warning-600 bg-warning-600 text-white;
+    @apply dark:border-amber-400 dark:bg-amber-600;
+  }
+
+  .plain-light-gray-colors {
+    @apply border-gray-300 bg-white text-gray-700 hover:border-primary-500 hover:text-primary-600;
+    @apply dark:border-slate-500 dark:bg-slate-600 dark:text-neutral-100;
+    @apply dark:hover:bg-primary-500 dark:hover:border-primary-200 dark:hover:text-white;
+  }
+
+  .info-card--blue {
+    @apply info-card info-blue-colors;
+  }
+
+  .accordion-grid-v {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: 0.3s ease-in-out;
+    transition-property: grid-template-rows, opacity;
+    opacity: 0;
+  }
+
+  .accordion-grid-v.expanded {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+
+  .accordion-grid-h {
+    display: grid;
+    grid-template-columns: 0fr;
+    transition: 0.3s;
+    transition-property: grid-template-columns, opacity;
+    opacity: 0;
+  }
+
+  .accordion-grid-h.expanded {
+    grid-template-columns: 1fr;
+    opacity: 1;
+  }
+
+  .accordion-inner {
+    overflow: hidden;
+  }
+
+  .quiz-timer {
+    @apply text-lg font-medium text-color--muted;
+  }
+
+}
+
+@layer utilities {
+  .text-color--title {
+    @apply text-gray-900 dark:text-neutral-100;
+  }
+
+  .text-color--muted {
+    @apply text-gray-600 dark:text-neutral-300;
+  }
+
+  .text-color--blue {
+    @apply text-blue-600 hover:text-blue-700;
+    @apply dark:text-blue-300 dark:hover:text-blue-100;
+  }
+
+  .bg-info-blue {}
 }
 
 /* Custom styles for the test interface */
@@ -89,86 +262,7 @@ body {
 }
 
 /* Mobile-specific fixes for text colors */
-@media (max-width: 768px) {
-  .answer-option {
-    @apply text-gray-900;
-  }
+@media (max-width: 768px) {}
 
-  .answer-option span {
-    @apply text-gray-900 !important;
-  }
-
-  .answer-option.selected {
-    @apply text-gray-900;
-  }
-
-  .answer-option.selected span {
-    @apply text-gray-900 !important;
-  }
-
-  /* Force text color for all interactive elements */
-  button {
-    color: inherit;
-  }
-
-  /* Ensure proper contrast on mobile */
-  .bg-white {
-    @apply text-gray-900;
-  }
-
-  /* Force dark text on all answer buttons */
-  button.answer-option span {
-    color: #111827 !important;
-    /* gray-900 */
-  }
-
-  /* Override any inherited text colors on mobile */
-  .bg-white * {
-    color: inherit;
-  }
-
-  /* Specific fix for answer text */
-  div.space-y-3 button span {
-    color: #111827 !important;
-    /* gray-900 */
-  }
-
-  /* Mobile navigation button fixes */
-  .flex.flex-col.gap-3 {
-    width: 100%;
-  }
-
-  /* Ensure buttons don't overflow on small screens */
-  @media (max-width: 480px) {
-    .px-4.sm\:px-8 {
-      padding-left: 0.75rem !important;
-      padding-right: 0.75rem !important;
-    }
-
-    /* Make sure buttons fit on very narrow screens */
-    button {
-      min-width: 0;
-      font-size: 0.875rem;
-    }
-
-    /* Reduce padding on very small screens */
-    .container {
-      padding-left: 0.5rem;
-      padding-right: 0.5rem;
-    }
-
-    /* Stack navigation buttons vertically on very small screens */
-    .flex.gap-3.order-2 {
-      flex-direction: column;
-      width: 100%;
-    }
-  }
-}
-
-.section-px {
-  @apply px-3 sm:px-6;
-}
-
-.section-py {
-  @apply py-6;
-}
+/* Ensure buttons don't overflow on small screens */
+@media (max-width: 480px) {}

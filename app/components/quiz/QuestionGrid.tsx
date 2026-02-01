@@ -21,15 +21,15 @@ export function QuestionGrid({
   const getStatusClass = (status: QuestionStatus) => {
     switch (status) {
       case 'current':
-        return 'border-primary-600 bg-primary-600 !text-white'
+        return 'primary-blue-colors '
       case 'correct':
-        return 'border-success-500 bg-success-500 text-white'
+        return 'primary-green-colors '
       case 'incorrect':
-        return 'border-danger-500 bg-danger-500 text-white'
+        return 'primary-red-colors'
       case 'review':
-        return 'border-warning-500 bg-warning-500 text-white'
+        return 'primary-amber-colors '
       default:
-        return 'border-gray-300 bg-white text-gray-700 hover:border-primary-500 hover:text-primary-600'
+        return 'plain-light-gray-colors'
     }
   }
 
@@ -40,7 +40,7 @@ export function QuestionGrid({
         <div className="flex justify-end items-center mb-2">
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="text-sm text-primary-600 hover:text-primary-700 font-medium flex items-center gap-1"
+            className="text-sm text-color--blue font-medium flex items-center gap-1"
           >
             {isExpanded ? (
               <>
@@ -115,24 +115,24 @@ export function QuestionStatusLegend({ mode }: QuestionStatusLegendProps) {
   return (
     <div className="flex flex-wrap gap-4 text-xs sm:text-sm">
       <div className="flex items-center gap-2">
-        <div className="w-4 h-4 bg-blue-500 rounded"></div>
-        <span className="text-gray-600">Current</span>
+        <div className="w-4 h-4 primary-blue-colors border-2 rounded"></div>
+        <span className="text-color--muted">Current</span>
       </div>
       <div className="flex items-center gap-2">
-        <div className="w-4 h-4 bg-green-500 rounded"></div>
-        <span className="text-gray-600">Correct</span>
+        <div className="w-4 h-4 primary-green-colors border-2 rounded"></div>
+        <span className="text-color--muted">Correct</span>
       </div>
       <div className="flex items-center gap-2">
-        <div className="w-4 h-4 bg-red-500 rounded"></div>
-        <span className="text-gray-600">Incorrect</span>
+        <div className="w-4 h-4 primary-red-colors border-2 rounded"></div>
+        <span className="text-color--muted">Incorrect</span>
       </div>
       <div className="flex items-center gap-2">
-        <div className="w-4 h-4 bg-yellow-500 rounded"></div>
-        <span className="text-gray-600">Review</span>
+        <div className="w-4 h-4 primary-amber-colors border-2 rounded"></div>
+        <span className="text-color--muted">Review</span>
       </div>
       <div className="flex items-center gap-2">
-        <div className="w-4 h-4 bg-gray-200 border border-gray-300 rounded"></div>
-        <span className="text-gray-600">Unanswered</span>
+        <div className="w-4 h-4 plain-light-gray-colors border-2 rounded"></div>
+        <span className="text-color--muted">Unanswered</span>
       </div>
     </div>
   )

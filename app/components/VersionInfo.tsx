@@ -9,7 +9,7 @@ export default function VersionInfo() {
   useEffect(() => {
     // This will be different for each build
     setBuildTime(process.env.NEXT_PUBLIC_BUILD_TIME || new Date().toISOString())
-    
+
     // Debug environment info
     const env = {
       NODE_ENV: process.env.NODE_ENV,

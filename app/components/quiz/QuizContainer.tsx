@@ -100,7 +100,7 @@ export function QuizContainer({ config, onBackToSelection }: QuizContainerProps)
   const selectedAnswers = state.selectedAnswers[state.currentQuestionIndex] || []
 
   return (
-    <div className="min-h-[100dvh] bg-gray-50">
+    <div className="min-h-[100dvh]">
       <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8">
         <div className="max-w-4xl mx-auto">
 
@@ -117,8 +117,8 @@ export function QuizContainer({ config, onBackToSelection }: QuizContainerProps)
           />
 
           {/* Question Status Grid */}
-          <div className="bg-white rounded-lg shadow-sm section-px section-py mb-6">
-            <div className="flex justify-between text-sm text-gray-600 mb-4">
+          <div className="section-card section-card-color mb-6">
+            <div className="flex justify-between text-sm text-color--muted mb-4">
               <span>Question Status</span>
               <span>
                 {getters.getAnsweredCount()} of {state.questions.length} answered
@@ -148,11 +148,11 @@ export function QuizContainer({ config, onBackToSelection }: QuizContainerProps)
             )}
 
             {/* Practice finish option */}
-            {config.mode === 'practice' && getters.getAnsweredCount() > 0 && (
+            {config.mode === 'practice' && (
               <div className="mt-4">
                 <button
                   onClick={handleFinish}
-                  className="bg-success-600 !text-white px-6 py-3 rounded-lg font-medium hover:bg-success-700"
+                  className="btn--green"
                 >
                   Finish Practice ({getters.getAnsweredCount()} questions answered)
                 </button>
@@ -161,7 +161,7 @@ export function QuizContainer({ config, onBackToSelection }: QuizContainerProps)
           </div>
 
           {/* Question Content */}
-          <div className="bg-white rounded-lg shadow-sm section-px section-py md:p-8">
+          <div className="section-card section-card-color ">
             <QuestionDisplay
               question={currentQuestion}
               selectedAnswers={selectedAnswers}

@@ -66,5 +66,10 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addVariant }) {
+      addVariant('light', '@media (prefers-color-scheme: light)')
+      addVariant('dark', '@media (prefers-color-scheme: dark)')
+    },
+  ],
 }

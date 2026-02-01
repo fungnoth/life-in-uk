@@ -25,12 +25,12 @@ export function QuestionDisplay({
 
   return (
     <div>
-      <h2 className="text-xl md:text-2xl font-semibold text-gray-800 mb-6 leading-relaxed">
+      <h2 className="text-xl md:text-2xl font-semibold text-color--title mb-6 leading-relaxed">
         {question.question}
       </h2>
 
       {question.isMultipleChoice && (
-        <p className="text-sm text-blue-600 font-medium mb-4">
+        <p className="text-sm text-color--blue font-medium mb-4">
           📝 Select all correct answers (multiple choice question)
         </p>
       )}
@@ -42,7 +42,7 @@ export function QuestionDisplay({
           const isSelected = selectedAnswers.includes(answerId)
           const isCorrect = answer.isCorrect && (answer.isCorrect.toLowerCase() === 'true' || answer.isCorrect.toLowerCase() === 'yes')
 
-          let buttonClass = "w-full p-4 text-left rounded-lg border-2 transition-all duration-200 "
+          let buttonClass = "answer-button "
 
           if (showResult) {
             if (isSelected && isCorrect) {
@@ -52,13 +52,13 @@ export function QuestionDisplay({
             } else if (!isSelected && isCorrect) {
               buttonClass += "bg-success-50 border-success-300 text-success-700"
             } else {
-              buttonClass += "bg-gray-50 border-gray-200 text-gray-700"
+              buttonClass += "answer-button--other-results"
             }
           } else {
             if (isSelected) {
-              buttonClass += "bg-primary-100 border-primary-500 text-primary-800"
+              buttonClass += "answer-button--selected"
             } else {
-              buttonClass += "bg-white border-gray-200 text-gray-700 hover:border-primary-300 hover:bg-primary-50"
+              buttonClass += "answer-button--unselected"
             }
           }
 

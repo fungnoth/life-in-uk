@@ -36,7 +36,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-gray-50">
+      <head>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-25..0&icon_names=bookmark,bookmark_added,chevron_left" />
+      </head>
+      <body className="min-h-screen">
         {children}
         <VersionInfo />
       </body>

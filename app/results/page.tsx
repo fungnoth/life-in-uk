@@ -128,21 +128,17 @@ export default function ResultsPage() {
   }
 
   const clearPracticeProgress = () => {
-    if (window.confirm('Are you sure you want to clear your practice progress? This will reset all your answers but keep your review markers.')) {
-      localStorage.removeItem('life-in-uk-practice-progress')
-      setClearedFeedback('Practice progress cleared!')
-      setTimeout(() => setClearedFeedback(null), 3000)
-    }
+    localStorage.removeItem('life-in-uk-practice-progress')
+    setClearedFeedback('Practice progress cleared!')
+    setTimeout(() => setClearedFeedback(null), 3000)
   }
 
   const clearReviewMarkers = () => {
-    if (window.confirm('Are you sure you want to clear all review markers?')) {
-      localStorage.removeItem('life-in-uk-reviewed-questions')
-      // Update local state to reflect change immediately
-      setResults(prev => prev.map(r => ({ ...r, isReviewed: false })))
-      setClearedFeedback('Review markers cleared!')
-      setTimeout(() => setClearedFeedback(null), 3000)
-    }
+    localStorage.removeItem('life-in-uk-reviewed-questions')
+    // Update local state to reflect change immediately
+    setResults(prev => prev.map(r => ({ ...r, isReviewed: false })))
+    setClearedFeedback('Review markers cleared!')
+    setTimeout(() => setClearedFeedback(null), 3000)
   }
 
   if (loading) {
@@ -154,12 +150,12 @@ export default function ResultsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            <h1 className="text-4xl font-bold text-color--title mb-4">
               {getTestTitle()}
             </h1>
             <div className={`text-6xl font-bold mb-4 ${passed ? 'text-success-600' : 'text-danger-600'}`}>
@@ -181,38 +177,38 @@ export default function ResultsPage() {
 
           {/* Score Summary */}
           <div className="grid md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-white rounded-lg shadow-md p-6 text-center">
+            <div className="section-card section-card-color p-6 text-center">
               <div className="text-3xl font-bold text-success-600 mb-2">
                 {correctCount}
               </div>
-              <div className="text-gray-600">Correct Answers</div>
+              <div className="text-color--muted">Correct Answers</div>
             </div>
 
-            <div className="bg-white rounded-lg shadow-md p-6 text-center">
+            <div className="section-card section-card-color p-6 text-center">
               <div className="text-3xl font-bold text-danger-600 mb-2">
                 {incorrectCount}
               </div>
-              <div className="text-gray-600">Incorrect Answers</div>
+              <div className="text-color--muted">Incorrect Answers</div>
             </div>
 
-            <div className="bg-white rounded-lg shadow-md p-6 text-center">
+            <div className="section-card section-card-color p-6 text-center">
               <div className="text-3xl font-bold text-primary-600 mb-2">
                 {results.length}
               </div>
-              <div className="text-gray-600">Total Questions</div>
+              <div className="text-color--muted">Total Questions</div>
             </div>
           </div>
 
           {/* Export and Actions */}
-          <div className="bg-white rounded-lg shadow-md section-px section-py mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+          <div className="section-card section-card-color section-px section-py mb-8">
+            <h2 className="text-2xl font-semibold text-color--title mb-4">
               Actions
             </h2>
             <div className="flex flex-wrap gap-4">
               {resultsToReview.length > 0 && (
                 <button
                   onClick={exportIncorrectAnswers}
-                  className="bg-warning-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-warning-700 transition-colors flex items-center gap-2"
+                  className="btn btn--warning flex items-center gap-2"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -223,7 +219,7 @@ export default function ResultsPage() {
 
               <Link
                 href={mode === 'individual' ? '/individual' : '/test'}
-                className="bg-primary-600 !text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-700 transition-colors"
+                className="btn btn--blue"
               >
                 {mode === 'individual' ? 'Take Another Individual Test' : 'Take Another Test'}
               </Link>
@@ -239,22 +235,16 @@ export default function ResultsPage() {
             {/* Persistence Management (Practice Mode Only) */}
             {mode === 'practice' && (
               <div className="mt-8 pt-6 border-t border-gray-100">
-                <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center gap-2">
-                  <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  Practice Progress Management
-                </h3>
                 <div className="flex flex-wrap gap-4">
                   <button
                     onClick={clearPracticeProgress}
-                    className="bg-danger-50 text-danger-700 px-4 py-2 border border-danger-200 rounded-lg text-sm font-medium hover:bg-danger-100 transition-colors"
+                    className="btn btn--danger"
                   >
                     Clear Practice Progress
                   </button>
                   <button
                     onClick={clearReviewMarkers}
-                    className="bg-warning-50 text-warning-700 px-4 py-2 border border-warning-200 rounded-lg text-sm font-medium hover:bg-warning-100 transition-colors"
+                    className="btn btn--warning"
                   >
                     Clear All Review Markers
                   </button>
@@ -312,11 +302,11 @@ export default function ResultsPage() {
 
           {/* Perfect Score Message */}
           {resultsToReview.length === 0 && (
-            <div className="bg-success-50 border border-success-200 rounded-lg section-px section-py text-center">
-              <div className="text-success-700 text-xl font-medium mb-2">
+            <div className="info-green-colors section-card  text-center">
+              <div className="text-xl font-medium mb-2">
                 🌟 Perfect Score! 🌟
               </div>
-              <p className="text-success-600">
+              <p className="">
                 Excellent work! You answered all questions correctly.
               </p>
             </div>

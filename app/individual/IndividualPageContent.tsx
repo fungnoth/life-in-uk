@@ -127,24 +127,24 @@ export default function IndividualPageContent() {
 
   // Show exam selection
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl font-bold text-gray-900 mb-8 text-center">
+          <h1 className="text-4xl font-bold font-color--title mb-8 text-center">
             Individual Tests
           </h1>
 
-          <p className="text-xl text-gray-600 mb-12 text-center max-w-2xl mx-auto">
+          <p className="text-xl text-color--muted mb-12 text-center max-w-2xl mx-auto">
             Practice specific exam sets. Choose from {availableExams.length} available tests.
           </p>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             {availableExams.map(examNum => (
-              <div key={examNum} className="bg-white p-6 rounded-xl shadow-md">
-                <h3 className="text-2xl font-semibold text-gray-800 mb-4">
+              <div key={examNum} className="section-card section-card-color">
+                <h3 className="text-2xl font-semibold font-color--title mb-4">
                   Exam {examNum}
                 </h3>
-                <p className="text-gray-600 mb-6">
+                <p className="text-color-muted mb-6">
                   Practice all questions from exam set {examNum}.
                 </p>
 

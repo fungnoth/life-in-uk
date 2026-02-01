@@ -1,6 +1,8 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
+import { Collapsible } from '../Collapsible'
 
 interface QuizHeaderProps {
   mode: 'practice' | 'test' | 'individual'
@@ -25,6 +27,10 @@ export function QuizHeader({
 }: QuizHeaderProps) {
   const [isCollapsed, setIsCollapsed] = useState(false)
 
+  const toggleCollapse = () => {
+    setIsCollapsed(!isCollapsed)
+  }
+
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60)
     const remainingSeconds = seconds % 60
@@ -45,13 +51,11 @@ export function QuizHeader({
   }
 
   const getModeInfo = () => {
-    if (isCollapsed) return null
-
     switch (mode) {
       case 'test':
         return (
-          <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-            <div className="flex items-center gap-2 text-red-800">
+          <div className="mt-4 p-3 info-card info-red-colors">
+            <div className="flex items-center gap-2">
               <svg className="w-5 h-5 shrink-0" fill="currentColor" viewBox="0 -960 960 960">
                 <path d="M425-265h110v-255H425v255Zm55-315q25.5 0 42.75-17.25T540-640q0-25.5-17.25-42.75T480-700q-25.5 0-42.75 17.25T420-640q0 25.5 17.25 42.75T480-580Zm0 534q-91 0-169.99-34.08-78.98-34.09-137.41-92.52-58.43-58.43-92.52-137.41Q46-389 46-480q0-91 34.08-169.99 34.09-78.98 92.52-137.41 58.43-58.43 137.41-92.52Q389-914 480-914q91 0 169.99 34.08 78.98 34.09 137.41 92.52 58.43 58.43 92.52 137.41Q914-571 914-480q0 91-34.08 169.99-34.09 78.98-92.52 137.41-58.43 58.43-137.41 92.52Q571-46 480-46Z" />
               </svg>
@@ -61,8 +65,8 @@ export function QuizHeader({
         )
       case 'individual':
         return (
-          <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-            <div className="flex items-center gap-2 text-blue-800">
+          <div className="mt-4 p-3 info-card info-blue-colors">
+            <div className="flex items-center gap-2">
               <svg className="w-5 h-5 shrink-0" fill="currentColor" viewBox="0 -960 960 960">
                 <path d="M425-265h110v-255H425v255Zm55-315q25.5 0 42.75-17.25T540-640q0-25.5-17.25-42.75T480-700q-25.5 0-42.75 17.25T420-640q0 25.5 17.25 42.75T480-580Zm0 534q-91 0-169.99-34.08-78.98-34.09-137.41-92.52-58.43-58.43-92.52-137.41Q46-389 46-480q0-91 34.08-169.99 34.09-78.98 92.52-137.41 58.43-58.43 137.41-92.52Q389-914 480-914q91 0 169.99 34.08 78.98 34.09 137.41 92.52 58.43 58.43 92.52 137.41Q914-571 914-480q0 91-34.08 169.99-34.09 78.98-92.52 137.41-58.43 58.43-137.41 92.52Q571-46 480-46Z" />
               </svg>
@@ -72,8 +76,8 @@ export function QuizHeader({
         )
       case 'practice':
         return (
-          <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-            <div className="flex items-center gap-2 text-blue-800">
+          <div className="info-card info-card--blue mt-4 p-3">
+            <div className="flex items-center gap-2">
               <svg className="w-5 h-5 shrink-0" fill="currentColor" viewBox="0 -960 960 960">
                 <path d="M425-265h110v-255H425v255Zm55-315q25.5 0 42.75-17.25T540-640q0-25.5-17.25-42.75T480-700q-25.5 0-42.75 17.25T420-640q0 25.5 17.25 42.75T480-580Zm0 534q-91 0-169.99-34.08-78.98-34.09-137.41-92.52-58.43-58.43-92.52-137.41Q46-389 46-480q0-91 34.08-169.99 34.09-78.98 92.52-137.41 58.43-58.43 137.41-92.52Q389-914 480-914q91 0 169.99 34.08 78.98 34.09 137.41 92.52 58.43 58.43 92.52 137.41Q914-571 914-480q0 91-34.08 169.99-34.09 78.98-92.52 137.41-58.43 58.43-137.41 92.52Q571-46 480-46Z" />
               </svg>
@@ -86,85 +90,93 @@ export function QuizHeader({
     }
   }
 
-  if (isCollapsed) {
+  const getFullTimerElement = () => {
     return (
-      <div className="bg-white rounded-lg shadow-sm mb-6 p-3">
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => setIsCollapsed(false)}
-            className="p-2 hover:bg-gray-100 rounded-full"
-            title="Expand Header"
-          >
-            <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
+      <div className="mt-4 sm:mt-0 flex flex-col sm:items-end gap-2">
+        {timeLeft !== undefined && (
+          <div className={`quiz-timer whitespace-nowrap`}>
+            Time left: {formatTime(timeLeft)}
+          </div>
+        )}
 
-          <h1 className="text-lg font-bold text-gray-900">
-            {getTitle()}
-          </h1>
-          <p className="text-gray-600">
-            Question {currentQuestionIndex + 1} of {totalQuestions}
-          </p>
-        </div>
+        {answeredCount !== undefined && (
+          <div className="text-lg font-medium text-color--muted">
+            {answeredCount} of {totalQuestions} questions answered
+          </div>
+        )}
+
+        {onBackToSelection && (
+          <button
+            onClick={onBackToSelection}
+            className="text-primary-600 hover:text-primary-700 font-medium"
+          >
+            ← Back to {mode === 'individual' ? 'Exam Selection' : 'Main Menu'}
+          </button>
+        )}
       </div>
     )
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-sm mb-6 section-px section-py">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-4">
+    <div className={`section-card section-card-color mb-6 section-px section-py transition-[padding] duration-300 ${isCollapsed ? 'py-3' : ''}`}>
+      <div className="">
+        <div className="flex grow">
+          <div className="grow">
+            <div className="flex items-center  gap-2 ">
+              <Link href="/" className="flex items-center gap-2 text-sm">
+                <span className="material-symbols-outlined">
+                  chevron_left
+                </span>
+                <span className='sr-only'>Back to Home</span>
+              </Link>
+              <h1 className="text-2xl md:text-3xl text-color--title font-bold pr-4">
+                {getTitle()}
+              </h1>
+              <Collapsible isOpen={isCollapsed} direction="horizontal">
+                <span className="text-sm text-color--muted whitespace-nowrap">
+                  {currentQuestionIndex + 1} / {totalQuestions}
+                  {timeLeft !== undefined && (
+                    <div className={`quiz-timer text-sm`}>
+                      {formatTime(timeLeft)}
+                    </div>
+                  )}
+                </span>
+              </Collapsible>
+            </div>
+            <Collapsible isOpen={!isCollapsed}>
+              <p className="text-color--muted">
+                Question {currentQuestionIndex + 1} of {totalQuestions}
+              </p>
+            </Collapsible>
+          </div>
+          <Collapsible isOpen={!isCollapsed} direction="horizontal" className="max-sm:hidden whitespace-nowrap">
+            {getFullTimerElement()}
+          </Collapsible>
           <button
-            onClick={() => setIsCollapsed(true)}
-            className="p-2 hover:bg-gray-100 rounded-full"
-            title="Collapse Header"
+            onClick={() => toggleCollapse()}
+            className="p-2 text-color--muted hover:text-color--title flex items-start pt-3"
+            title={isCollapsed ? "Expand Header" : "Collapse Header"}
           >
-            <svg className="w-5 h-5 text-gray-500 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg
+              className={`w-5 h-5 transition-transform duration-300 ${isCollapsed ? 'rotate-0' : 'rotate-180'}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
             </svg>
           </button>
-
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
-              {getTitle()}
-            </h1>
-            <p className="text-gray-600">
-              Question {currentQuestionIndex + 1} of {totalQuestions}
-              {isCurrentQuestionReviewed && (
-                <span className="ml-2 px-2 py-1 bg-warning-100 text-warning-800 text-sm rounded">
-                  📋 Marked for Review
-                </span>
-              )}
-            </p>
-          </div>
         </div>
 
-        <div className="mt-4 sm:mt-0 flex flex-col sm:items-end gap-2">
-          {timeLeft !== undefined && (
-            <div className="text-lg font-medium text-gray-600">
-              Time remaining: {formatTime(timeLeft)}
-            </div>
-          )}
-
-          {answeredCount !== undefined && (
-            <div className="text-lg font-medium text-gray-600">
-              {answeredCount} of {totalQuestions} questions answered
-            </div>
-          )}
-
-          {onBackToSelection && (
-            <button
-              onClick={onBackToSelection}
-              className="text-primary-600 hover:text-primary-700 font-medium"
-            >
-              ← Back to {mode === 'individual' ? 'Exam Selection' : 'Main Menu'}
-            </button>
-          )}
-        </div>
       </div>
 
-      {getModeInfo()}
+      <Collapsible isOpen={!isCollapsed}>
+        <div className='sm:hidden'>
+          {getFullTimerElement()}
+        </div>
+
+        {getModeInfo()}
+      </Collapsible>
     </div>
   )
 }

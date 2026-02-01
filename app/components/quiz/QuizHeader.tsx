@@ -154,17 +154,12 @@ export function QuizHeader({
           </Collapsible>
           <button
             onClick={() => toggleCollapse()}
-            className="p-2 text-color--muted hover:text-color--title flex items-start pt-3"
+            className={`p-2 text-color--muted hover:text-color--title flex items-start  ${isCollapsed ? "pb-1" : "pt-3"}`}
             title={isCollapsed ? "Expand Header" : "Collapse Header"}
           >
-            <svg
-              className={`w-5 h-5 transition-transform duration-300 ${isCollapsed ? 'rotate-0' : 'rotate-180'}`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
+            <span className={`material-symbols-outlined block transition-transform duration-300 ${isCollapsed ? "scale-y-100" : "-scale-y-100"}`}>
+              keyboard_arrow_down
+            </span>
           </button>
         </div>
 

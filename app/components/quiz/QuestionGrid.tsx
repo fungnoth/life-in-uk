@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { QuestionStatus } from './types'
+import { Collapsible } from '../Collapsible'
 
 interface QuestionGridProps {
   questions: any[]
@@ -44,41 +45,41 @@ export function QuestionGrid({
           >
             {isExpanded ? (
               <>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-                </svg>
                 Collapse
               </>
             ) : (
               <>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
                 Expand All
               </>
             )}
+            <span className={`inline-block transition-transform duration-200 material-symbols-outlined ${isExpanded ? '-scale-y-100' : 'scale-y-100'}`}>
+              keyboard_arrow_down
+            </span>
           </button>
         </div>
-        <div
-          className="mb-4 overflow-y-auto grid gap-2 pr-2 grid-cols-[repeat(var(--cols,20),minmax(0,1fr))]
-          [--cols:10] md:[--cols:20]"
+        <Collapsible
+          isOpen={isExpanded}
+          className="peek"
           style={{
-            resize: isExpanded ? 'vertical' : 'none',
-            minHeight: '40px',
-            maxHeight: isExpanded ? 'none' : '90px',
+            '--peak-height': '90px'
           } as React.CSSProperties}
         >
-          {questions.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => onQuestionClick(index)}
-              className={`w-8 h-8 text-xs rounded border-2 font-medium transition-all duration-200 ${getStatusClass(getQuestionStatus(index))
-                }`}
-            >
-              {index + 1}
-            </button>
-          ))}
-        </div>
+          <div
+            className="mb-4 overflow-y-auto grid gap-2 pr-2 grid-cols-[repeat(var(--cols,20),minmax(0,1fr))]
+            [--cols:10] md:[--cols:20]"
+          >
+            {questions.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => onQuestionClick(index)}
+                className={`w-8 h-8 text-xs rounded border-2 font-medium transition-all duration-200 ${getStatusClass(getQuestionStatus(index))
+                  }`}
+              >
+                {index + 1}
+              </button>
+            ))}
+          </div>
+        </Collapsible>
       </div>
     )
   }

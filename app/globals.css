@@ -3,7 +3,6 @@
 @tailwind utilities;
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-25..0&icon_names=bookmark,bookmark_added,chevron_left');
 
 .material-symbols-outlined {
   font-family: 'Material Symbols Outlined';
@@ -152,10 +151,26 @@
     grid-template-rows: 0fr;
     transition: 0.3s ease-in-out;
     transition-property: grid-template-rows, opacity;
+    will-change: grid-template-rows, opacity;
     opacity: 0;
+    overflow: hidden;
+    /* Added to ensure clipping during transition */
   }
 
-  .accordion-grid-v.expanded {
+  .accordion-grid-v.peek {
+    opacity: 1;
+    grid-template-rows: var(--peak-height, 40px) 0fr;
+  }
+
+  .accordion-grid-v.peek.expanded {
+    grid-template-rows: var(--peak-height, 40px) 1fr;
+  }
+
+  .accordion-grid-v.peek>.accordion-inner {
+    grid-row: 1 / span 2;
+  }
+
+  .accordion-grid-v.expanded:not(.peek) {
     grid-template-rows: 1fr;
     opacity: 1;
   }
@@ -165,7 +180,9 @@
     grid-template-columns: 0fr;
     transition: 0.3s;
     transition-property: grid-template-columns, opacity;
+    will-change: grid-template-columns, opacity;
     opacity: 0;
+    overflow: hidden;
   }
 
   .accordion-grid-h.expanded {
@@ -175,6 +192,7 @@
 
   .accordion-inner {
     overflow: hidden;
+    min-height: 0;
   }
 
   .quiz-timer {

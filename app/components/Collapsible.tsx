@@ -1,19 +1,21 @@
 'use client'
 
-import { ReactNode } from 'react'
+import { ReactNode, CSSProperties } from 'react'
 
 interface CollapsibleProps {
     isOpen: boolean
     children: ReactNode
     direction?: 'vertical' | 'horizontal' | 'custom'
     className?: string
+    style?: CSSProperties
 }
 
 export function Collapsible({
     isOpen,
     children,
     direction = 'vertical',
-    className = ''
+    className = '',
+    style
 }: CollapsibleProps) {
     let gridClass;
     if (direction === "custom") {
@@ -25,7 +27,10 @@ export function Collapsible({
     }
 
     return (
-        <div className={`${gridClass} ${isOpen ? 'expanded' : ''} ${className}`}>
+        <div
+            className={`${gridClass} ${isOpen ? 'expanded' : ''} ${className}`}
+            style={style}
+        >
             <div className="accordion-inner">
                 {children}
             </div>

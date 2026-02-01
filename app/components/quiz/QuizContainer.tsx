@@ -55,7 +55,7 @@ export function QuizContainer({ config, onBackToSelection }: QuizContainerProps)
 
   if (state.loading) {
     return (
-      <div className="min-h-[100dvh] flex items-center justify-center">
+      <div className="min-h-[100svh] flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-600 mx-auto mb-4"></div>
           <p className="text-xl text-gray-600">
@@ -68,7 +68,7 @@ export function QuizContainer({ config, onBackToSelection }: QuizContainerProps)
 
   if (state.error) {
     return (
-      <div className="min-h-[100dvh] flex items-center justify-center">
+      <div className="min-h-[100svh] flex items-center justify-center">
         <div className="text-center">
           <p className="text-xl text-red-600 mb-4">Error: {state.error}</p>
           <button
@@ -92,7 +92,7 @@ export function QuizContainer({ config, onBackToSelection }: QuizContainerProps)
 
   if (state.questions.length === 0) {
     return (
-      <div className="min-h-[100dvh] flex items-center justify-center">
+      <div className="min-h-[100svh] flex items-center justify-center">
         <div className="text-center">
           <p className="text-xl text-red-600 mb-4">
             No questions found{config.examNumber ? ` for exam ${config.examNumber}` : ''}
@@ -115,7 +115,7 @@ export function QuizContainer({ config, onBackToSelection }: QuizContainerProps)
   const selectedAnswers = state.selectedAnswers[state.currentQuestionIndex] || []
 
   return (
-    <div className="min-h-[100dvh]">
+    <div className="min-h-[100svh]">
       <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8">
         <div className="max-w-4xl mx-auto">
 

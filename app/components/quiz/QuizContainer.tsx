@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { QuizConfig } from './types'
 import { useQuizData } from './useQuizData'
@@ -37,6 +38,20 @@ export function QuizContainer({ config, onBackToSelection }: QuizContainerProps)
 
     router.push(`/results?${params.toString()}`)
   }
+
+  // Auto-scroll to bottom when result is shown
+  useEffect(() => {
+    if (state.showResult) {
+      // Use a small delay to ensure the content has rendered/expanded
+      const timer = setTimeout(() => {
+        window.scrollTo({
+          top: document.documentElement.scrollHeight,
+          behavior: 'smooth'
+        })
+      }, 100)
+      return () => clearTimeout(timer)
+    }
+  }, [state.showResult])
 
   if (state.loading) {
     return (

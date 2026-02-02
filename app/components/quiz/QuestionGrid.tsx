@@ -20,10 +20,20 @@ export function QuestionGrid({
   const [isExpanded, setIsExpanded] = useState(false)
   const gridRef = useRef<HTMLDivElement>(null)
 
+  const scrollToTop = () => {
+    const container = gridRef.current;
+    const scroller = container?.parentElement
+    if (!scroller) return
+    scroller.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    })
+  }
   const scrollToCurrent = () => {
     const container = gridRef.current;
     const scroller = container?.parentElement
-    if (!isExpanded && scroller) {
+    if (!scroller) return
+    if (!isExpanded) {
       const currentButton = container.children[currentQuestionIndex] as HTMLElement
 
       if (currentButton) {
@@ -74,7 +84,13 @@ export function QuestionGrid({
       <div className="mb-6">
         <div className="flex justify-end items-center mb-2">
           <button
-            onClick={() => setIsExpanded(!isExpanded)}
+            onClick={() => {
+              setIsExpanded(!isExpanded);
+              const willBeExpanded = !isExpanded;
+              if (willBeExpanded) {
+                scrollToTop()
+              }
+            }}
             className="text-sm text-color--blue font-medium flex items-center gap-1"
           >
             {isExpanded ? "Collapse" : "Expand All"}

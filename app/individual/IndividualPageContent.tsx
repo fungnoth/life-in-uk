@@ -103,7 +103,7 @@ export default function IndividualPageContent() {
       <div className="min-h-[100svh] flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-600 mx-auto mb-4"></div>
-          <p className="text-xl text-gray-600">Loading available exams...</p>
+          <p className="text-xl text-color--muted">Loading available exams...</p>
         </div>
       </div>
     )

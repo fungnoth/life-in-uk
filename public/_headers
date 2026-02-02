@@ -3,26 +3,27 @@
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: geolocation=(), microphone=(), camera=()
+  Cache-Control: public, max-age=0, must-revalidate
 
+# Next.js static assets are hashed, so they can be cached forever
 /_next/static/*
   Cache-Control: public, max-age=31536000, immutable
 
 /static/*
   Cache-Control: public, max-age=31536000, immutable
 
+# Manifest and service worker should always be checked
+/manifest.json
+  Cache-Control: public, max-age=0, must-revalidate
+/sw.js
+  Cache-Control: public, max-age=0, must-revalidate
+
+# CSV files should be checked for updates
+/*.csv
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Root JS/CSS files (if any) should be checked
 /*.js
-  Cache-Control: public, max-age=31536000
-  X-Content-Type-Options: nosniff
-
+  Cache-Control: public, max-age=0, must-revalidate
 /*.css
-  Cache-Control: public, max-age=31536000
-  X-Content-Type-Options: nosniff
-
-# Block source map requests
-/*.js.map
-  X-Robots-Tag: noindex
-  Cache-Control: no-store
-
-/*.css.map
-  X-Robots-Tag: noindex
-  Cache-Control: no-store
+  Cache-Control: public, max-age=0, must-revalidate

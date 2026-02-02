@@ -6,6 +6,7 @@ import './utils/errorSuppression'
 export const metadata: Metadata = {
   title: 'Life in the UK Test',
   description: 'Practice Life in the UK citizenship test questions',
+  manifest: '/manifest.json',
   icons: {
     icon: [
       {
@@ -14,11 +15,24 @@ export const metadata: Metadata = {
       },
     ],
     shortcut: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect width="16" height="16" fill="%23012169"/><rect x="0" y="6" width="16" height="4" fill="white"/><rect x="6" y="0" width="4" height="16" fill="white"/><rect x="0" y="7" width="16" height="2" fill="%23C8102E"/><rect x="7" y="0" width="2" height="16" fill="%23C8102E"/></svg>',
+    apple: [
+      {
+        url: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="15%" fill="%23012169"/><rect x="0" y="192" width="512" height="128" fill="white"/><rect x="192" y="0" width="128" height="512" fill="white"/><rect x="0" y="224" width="512" height="64" fill="%23C8102E"/><rect x="224" y="0" width="64" height="512" fill="%23C8102E"/></svg>',
+        sizes: '512x512',
+        type: 'image/svg+xml',
+      },
+    ],
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'LifeUK',
   },
   other: {
     'cache-control': 'no-cache, no-store, must-revalidate',
     'pragma': 'no-cache',
     'expires': '0',
+    'build-version': process.env.NEXT_PUBLIC_BUILD_TIME || 'local',
   },
 }
 
@@ -27,6 +41,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
+  themeColor: '#012169',
 }
 const icons = [
   'bookmark',

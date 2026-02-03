@@ -20,4 +20,13 @@ echo "  NEXT_PUBLIC_BUILD_TIME: $NEXT_PUBLIC_BUILD_TIME"
 echo "Running Next.js build..."
 npx next build
 
+# Update Service Worker with build time for cache busting
+echo "Updating Service Worker build time..."
+if [ -f "out/sw.js" ]; then
+  sed -i "s/BUILD_TIME_PLACEHOLDER/$NEXT_PUBLIC_BUILD_TIME/g" out/sw.js
+fi
+if [ -f "public/sw.js" ]; then
+  sed -i "s/BUILD_TIME_PLACEHOLDER/$NEXT_PUBLIC_BUILD_TIME/g" public/sw.js
+fi
+
 echo "Build completed!"

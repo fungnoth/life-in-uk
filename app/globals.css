@@ -76,7 +76,7 @@
 
   .answer-button--other-results {
     @apply bg-gray-50 border-gray-200 text-gray-700;
-    @apply dark:bg-gray-300;
+    @apply dark:bg-gray-800 dark:border-gray-600 dark:text-neutral-300;
   }
 
   .answer-button--unselected {
@@ -101,7 +101,7 @@
 
   .answer-button--unselected-correct {
     @apply bg-success-50 border-success-300 text-success-700;
-    @apply dark:bg-success-300/20 dark:border-success-400 dark:text-success-50;
+    @apply dark:bg-black/50 dark:border-success-400 dark:text-success-200;
   }
 
   .section-card {

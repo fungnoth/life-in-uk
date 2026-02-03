@@ -6,7 +6,6 @@ import './utils/errorSuppression'
 export const metadata: Metadata = {
   title: 'Life in the UK Test',
   description: 'Practice Life in the UK citizenship test questions',
-  manifest: '/manifest.json',
   icons: {
     icon: [
       {
@@ -54,19 +53,25 @@ const icons = [
 
 import { ThemeProvider } from './components/ThemeProvider'
 import { ThemeToggle } from './components/ThemeToggle'
+import PWARegistration from './components/PWARegistration'
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const buildTime = process.env.NEXT_PUBLIC_BUILD_TIME || ''
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="stylesheet" href={`https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-25..0&icon_names=${icons.join(',')}`} />
+        {/* Force manifest update */}
+        <link rel="manifest" href={`/manifest.json?v=${encodeURIComponent(buildTime)}`} />
       </head>
       <body className="min-h-[100svh]">
         <ThemeProvider>
+          <PWARegistration />
           <ThemeToggle />
           {children}
           <VersionInfo />

@@ -9,10 +9,10 @@ const path = require('path');
 console.log('🔍 Detecting build environment...');
 
 // Check if we're in GitHub Actions (GitHub Pages environment)
-const isGitHubActions = process.env.GITHUB_ACTIONS === 'true' || 
-                       process.env.CI === 'true' ||
-                       process.env.GITHUB_WORKFLOW ||
-                       process.env.RUNNER_OS;
+const isGitHubActions = process.env.GITHUB_ACTIONS === 'true' ||
+  process.env.CI === 'true' ||
+  process.env.GITHUB_WORKFLOW ||
+  process.env.RUNNER_OS;
 
 // Check if we're in production mode
 const isProduction = process.env.NODE_ENV === 'production';
@@ -30,11 +30,11 @@ const buildEnv = { ...process.env };
 // If we're in GitHub Actions and production, set GitHub Pages variables
 if (isGitHubActions && isProduction) {
   console.log('🚀 GitHub Pages deployment detected - setting environment variables');
-  
+
   buildEnv.GITHUB_PAGES = 'true';
   buildEnv.NEXT_PUBLIC_GITHUB_PAGES = 'true';
   buildEnv.NEXT_PUBLIC_BUILD_TIME = new Date().toISOString();
-  
+
   console.log('✅ Environment variables set:');
   console.log('  - GITHUB_PAGES: true');
   console.log('  - NEXT_PUBLIC_GITHUB_PAGES: true');
@@ -57,5 +57,23 @@ nextBuild.on('close', (code) => {
     console.error(`Next.js build failed with exit code ${code}`);
     process.exit(code);
   }
+
+  // Update Service Worker with build time
+  const fs = require('fs');
+  const swPath = path.join(process.cwd(), 'out', 'sw.js');
+  const swPublicPath = path.join(process.cwd(), 'public', 'sw.js');
+  const buildTime = buildEnv.NEXT_PUBLIC_BUILD_TIME;
+
+  if (buildTime) {
+    [swPath, swPublicPath].forEach(p => {
+      if (fs.existsSync(p)) {
+        console.log(`Updating Service Worker build time in ${p}...`);
+        let content = fs.readFileSync(p, 'utf8');
+        content = content.replace(/BUILD_TIME_PLACEHOLDER/g, buildTime);
+        fs.writeFileSync(p, content, 'utf8');
+      }
+    });
+  }
+
   console.log('\n✅ Build completed successfully!');
 });

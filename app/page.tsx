@@ -19,10 +19,10 @@ export default function Home() {
         </p>
 
         <div className="grid md:grid-cols-3 gap-8 mb-12">
-          <div className="section-card section-card-color">
-            <label className="-mt-4 mb-2 flex items-center justify-end gap-3 px-3 py-2 text-sm font-medium">
-              <span className={`${shuffleQuestions ? ' text-primary-600 dark:text-primary-100' : 'text-color--muted dark:opacity-85'}`}>Randomised?</span>
-              <span className="relative inline-flex h-7 w-12 items-center">
+          <div className="section-card section-card-color relative pt-12 md:py-12">
+            <label className="absolute top-0 right-0 flex items-center justify-end gap-3 px-3 py-2 text-sm font-medium">
+              <span className={`${shuffleQuestions ? ' text-primary-600 dark:text-primary-100' : 'text-color--muted dark:opacity-85'}`}>Shuffle Questions</span>
+              <span className="relative inline-flex scale-[0.85] h-7 w-12 items-center">
                 <input
                   type="checkbox"
                   checked={shuffleQuestions}
@@ -47,7 +47,7 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="section-card section-card-color">
+          <div className="section-card section-card-color md:py-12">
             <h2 className="text-2xl font-semibold mb-4">
               ⏱️ Test Mode
             </h2>
@@ -62,7 +62,7 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="section-card section-card-color">
+          <div className="section-card section-card-color md:py-12">
             <h2 className="text-2xl font-semibold mb-4">
               📋 Individual Tests
             </h2>

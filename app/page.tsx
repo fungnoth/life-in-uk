@@ -1,10 +1,10 @@
 'use client'
 
-import { useState } from 'react'
 import Link from 'next/link'
+import { usePracticeSettings } from './components/PracticeSettingsProvider'
 
 export default function Home() {
-  const [shuffleQuestions, setShuffleQuestions] = useState(false)
+  const { shuffleQuestions, setShuffleQuestions } = usePracticeSettings()
 
   return (
     <main className="container mx-auto px-4 py-16">
@@ -40,7 +40,7 @@ export default function Home() {
               Practice with all available questions. No time limit, instant feedback.
             </p>
             <Link
-              href={`/practice?shuffleQuestions=${shuffleQuestions ? 'true' : 'false'}`}
+              href="/practice"
               className="inline-block btn--blue"
             >
               Start Practice

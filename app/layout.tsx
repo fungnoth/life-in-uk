@@ -54,6 +54,7 @@ const icons = [
 import { ThemeProvider } from './components/ThemeProvider'
 import { ThemeToggle } from './components/ThemeToggle'
 import PWARegistration from './components/PWARegistration'
+import { PracticeSettingsProvider } from './components/PracticeSettingsProvider'
 
 export default function RootLayout({
   children,
@@ -71,10 +72,12 @@ export default function RootLayout({
       </head>
       <body className="min-h-[100svh]">
         <ThemeProvider>
-          <PWARegistration />
-          <ThemeToggle />
-          {children}
-          <VersionInfo />
+          <PracticeSettingsProvider>
+            <PWARegistration />
+            <ThemeToggle />
+            {children}
+            <VersionInfo />
+          </PracticeSettingsProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -1,15 +1,14 @@
 'use client'
 
-import { useSearchParams } from 'next/navigation'
+import { usePracticeSettings } from '../components/PracticeSettingsProvider'
 import { QuizContainer } from '../components/quiz'
 
 export default function PracticePage() {
-  const searchParams = useSearchParams()
-  const shuffleQuestions = searchParams.get('shuffleQuestions') === 'true'
+  const { shuffleQuestions, isLoaded } = usePracticeSettings()
 
   const config = {
     mode: 'practice' as const,
-    shuffleQuestions,
+    shuffleQuestions: isLoaded ? shuffleQuestions : false,
     shuffleAnswers: true,
     showInstantFeedback: true,
     allowReview: true,

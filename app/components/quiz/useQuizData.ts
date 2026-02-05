@@ -149,6 +149,7 @@ export function useQuizData(config: QuizConfig) {
             const key = `${q.examNumber}-${q.questionNumber}`
             questionMap.set(key, {
               ...q,
+              internalQuestionNumber: 0,
               examNumber: parseInt(q.examNumber),
               questionNumber: parseInt(q.questionNumber),
               answers: [],
@@ -184,6 +185,10 @@ export function useQuizData(config: QuizConfig) {
 
             return hasValidAnswers && hasCorrectAnswer
           })
+          .map((question, index) => ({
+            ...question,
+            internalQuestionNumber: index + 1
+          }))
 
         if (validQuestions.length === 0) {
           throw new Error('No valid questions found after filtering')
@@ -398,6 +403,7 @@ export function useQuizData(config: QuizConfig) {
 
         return {
           questionIndex: index,
+          internalQuestionNumber: question.internalQuestionNumber,
           examNumber: question.examNumber,
           questionNumber: question.questionNumber,
           question: question.question,

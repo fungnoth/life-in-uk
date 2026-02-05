@@ -1,5 +1,5 @@
-const CACHE_NAME = 'life-in-uk-v1';
 const BUILD_TIME = 'BUILD_TIME_PLACEHOLDER';
+const CACHE_NAME = `life-in-uk-${BUILD_TIME}`;
 
 self.addEventListener('install', (event) => {
     self.skipWaiting();

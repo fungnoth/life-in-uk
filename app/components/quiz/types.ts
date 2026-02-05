@@ -1,6 +1,7 @@
 // Shared types for quiz components
 
 export interface Question {
+  internalQuestionNumber: number
   examNumber: number
   questionNumber: number
   question: string
@@ -50,6 +51,7 @@ export interface QuizState {
 
 export interface QuizResult {
   questionIndex: number
+  internalQuestionNumber: number
   examNumber: number
   questionNumber: number
   question: string

@@ -173,6 +173,7 @@ export function QuizContainer({ config, onBackToSelection }: QuizContainerProps)
           <div className="section-card section-card-color ">
             <QuestionDisplay
               question={currentQuestion}
+              mode={config.mode}
               selectedAnswers={selectedAnswers}
               showResult={state.showResult}
               result={result}

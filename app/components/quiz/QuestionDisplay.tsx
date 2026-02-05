@@ -4,6 +4,7 @@ import { QuestionData, Answer } from './types'
 
 interface QuestionDisplayProps {
   question: QuestionData
+  mode: 'practice' | 'test' | 'individual'
   selectedAnswers: number[]
   showResult: boolean
   result?: {
@@ -16,6 +17,7 @@ interface QuestionDisplayProps {
 
 export function QuestionDisplay({
   question,
+  mode,
   selectedAnswers,
   showResult,
   result,
@@ -25,6 +27,11 @@ export function QuestionDisplay({
 
   return (
     <div>
+      {mode === 'practice' && (
+        <p className="text-sm text-color--blue font-semibold mb-2">
+          {`Q${question.internalQuestionNumber}`}
+        </p>
+      )}
       <h2 className="text-xl md:text-2xl font-semibold text-color--title mb-6 leading-relaxed">
         {question.question}
       </h2>

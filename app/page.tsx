@@ -1,6 +1,11 @@
+'use client'
+
+import { useState } from 'react'
 import Link from 'next/link'
 
 export default function Home() {
+  const [shuffleQuestions, setShuffleQuestions] = useState(false)
+
   return (
     <main className="container mx-auto px-4 py-16">
       <div className="max-w-4xl mx-auto text-center">
@@ -15,6 +20,19 @@ export default function Home() {
 
         <div className="grid md:grid-cols-3 gap-8 mb-12">
           <div className="section-card section-card-color">
+            <label className="-mt-4 mb-2 flex items-center justify-end gap-3 px-3 py-2 text-sm font-medium">
+              <span className={`${shuffleQuestions ? ' text-primary-600 dark:text-primary-100' : 'text-color--muted dark:opacity-85'}`}>Randomised?</span>
+              <span className="relative inline-flex h-7 w-12 items-center">
+                <input
+                  type="checkbox"
+                  checked={shuffleQuestions}
+                  onChange={e => setShuffleQuestions(e.target.checked)}
+                  className="peer sr-only"
+                />
+                <span className="absolute inset-0 rounded-full bg-slate-300 transition peer-checked:bg-primary-500"></span>
+                <span className="absolute left-1 h-5 w-5 rounded-full bg-white shadow transition-transform peer-checked:translate-x-5"></span>
+              </span>
+            </label>
             <h2 className="text-2xl font-semibold mb-4">
               📚 Practice Mode
             </h2>
@@ -22,7 +40,7 @@ export default function Home() {
               Practice with all available questions. No time limit, instant feedback.
             </p>
             <Link
-              href="/practice"
+              href={`/practice?shuffleQuestions=${shuffleQuestions ? 'true' : 'false'}`}
               className="inline-block btn--blue"
             >
               Start Practice
